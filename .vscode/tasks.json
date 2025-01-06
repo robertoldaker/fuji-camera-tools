@@ -12,6 +12,16 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build and install FujiImageMover",
+            "command": "bash",
+            "args": [
+                "${workspaceFolder}/FujiImageMover/BuildAndInstall.sh"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/FujiImageMover",
+            }
         }
     ]
 }
