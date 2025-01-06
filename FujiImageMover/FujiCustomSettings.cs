@@ -1,3 +1,4 @@
+using System.Reflection;
 using MetadataExtractor;
 using MetadataExtractor.Formats.Exif.Makernotes;
 
@@ -43,15 +44,19 @@ public class FujiCustomSettings {
         setFields(directories);
     }
 
-    public FilmSimulation FilmSimulation { get; private set; }
-    public WhiteBalance WhiteBalance { get; private set; }
-    public DynamicRange DynamicRange { get; private set; }
-    public int[] WhiteBalanceShift { get; private set; }
-    public int WhiteBalanceTemp { get; private set; }
-    public int Color { get; private set;}
-    public int Sharpness {get; private set; }
-    public int ShadowTone {get; private set; }
-    public int HighlightTone {get; private set; }
+    public FujiCustomSettings() {
+        this.WhiteBalanceShift = new int[2];
+    }
+
+    public FilmSimulation FilmSimulation { get; set; }
+    public WhiteBalance WhiteBalance { get; set; }
+    public DynamicRange DynamicRange { get; set; }
+    public int[] WhiteBalanceShift { get; set; }
+    public int WhiteBalanceTemp { get; set; }
+    public int Color { get; set; }
+    public int Sharpness {get; set; }
+    public int ShadowTone {get; set; }
+    public int HighlightTone {get; set; }
 
     private void setFilmMode(FujifilmMakernoteDirectory mn) {
         if ( mn.TryGetInt16(FujifilmMakernoteDirectory.TagFilmMode, out short fm) ) {
@@ -196,6 +201,37 @@ public class FujiCustomSettings {
 
         setShadowTone(mn);
 
+    }
+
+    public static bool AreEqual(FujiCustomSettings obj1, FujiCustomSettings obj2)
+    {
+        if (obj1 == null || obj2 == null)
+            return false;
+
+        Type type = typeof(FujiCustomSettings);
+        foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        {
+            var value1 = property.GetValue(obj1);
+            var value2 = property.GetValue(obj2);
+            
+            if (value1 is Array array1 && value2 is Array array2)
+            {
+                if (array1.Length != array2.Length)
+                    return false;
+
+                for (int i = 0; i < array1.Length; i++)
+                {
+                    if (!Equals(array1.GetValue(i), array2.GetValue(i)))
+                        return false;
+                }
+            }
+            else
+            {
+                if (!Equals(value1, value2))
+                    return false;
+            }
+        }
+        return true;
     }
 
     public override string ToString() {
