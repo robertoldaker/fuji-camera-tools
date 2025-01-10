@@ -5,7 +5,7 @@ namespace FujiImageMover
 {
     public class Config
     {
-        private static Config _instance=null;
+        private static Config? _instance=null;
         private static object _instanceLock = new object();
 
         public static Config Instance {
@@ -43,13 +43,21 @@ namespace FujiImageMover
         public Config() {
             // set defaults
             DestinationFolder = "";
-            ApiKey = "";
-            SpreadsheetId = "";
+            SetFujiFilmRecipe = new SetFujiFilmRecipeClass() {
+                Enabled = false,
+                ApiKey = "",
+                SpreadsheetId = ""
+            };
         }
 
         public string DestinationFolder { get; set; }
-        public string ApiKey { get; set; }
-        public string SpreadsheetId { get; set; }
+        public SetFujiFilmRecipeClass SetFujiFilmRecipe { get; set; }
+
+        public class SetFujiFilmRecipeClass {
+            public bool Enabled { get; set; }
+            public string ApiKey { get; set; }
+            public string SpreadsheetId { get; set; }
+        }
     }
 
 }
