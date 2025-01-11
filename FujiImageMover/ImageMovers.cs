@@ -3,8 +3,7 @@ using Google.Apis.Sheets.v4.Data;
 namespace FujiImageMover;
 
 public interface IImageMover {
-    public void Move(string file, ImageMetadata md, string destFolder, string recipeName);
-    public List<string> ListFiles();
+    public int MoveFiles(string destFolder, FujiRecipes? fujiRecipes);
 }
 
 public class ImageMoverFactory {
@@ -16,11 +15,13 @@ public class ImageMoverFactory {
         // check if we have an attached SD card
         var sourceFolder = findAttachedSdCard();
         if ( sourceFolder != null ) {
+            Console.WriteLine($"Found attached SD card at [{sourceFolder}]");
             return new SdCardImageMover(sourceFolder);
         }
         // check if we have a camera attached
         var camera = findAttachedCamera();
         if ( camera != null ) {
+            Console.WriteLine($"Found attached camera [{camera}]");
             return new CameraImageMover();
         }
         // no attached SD card or camera found
@@ -66,7 +67,25 @@ public class SdCardImageMover : IImageMover
     {
         _sourceFolder = sourceFolder;
     }
-    public void Move(string file, ImageMetadata md,string destFolder, string recipeName)
+
+    public int MoveFiles(string destFolder, FujiRecipes? fujiRecipes)
+    {
+        var imageFiles = listFiles();
+        foreach (var file in imageFiles) {
+            var md = new ImageMetadata(file);
+            string recipeName = "";
+            if ( fujiRecipes!=null && md.FujiCustomSettings != null ) {
+                recipeName = fujiRecipes.FindMatch(md.FujiCustomSettings);
+            }
+            // Only move files with a valid date
+            if ( ! (md.DateTime == default) ) {
+                moveFile(file, md, destFolder, recipeName);
+            }
+        }
+        return imageFiles.Count();
+    }
+
+    private void moveFile(string file, ImageMetadata md,string destFolder, string recipeName)
     {
         string year = md.DateTime.Year.ToString();
         string month = ImageMoverFactory.Months[md.DateTime.Month-1];
@@ -88,9 +107,9 @@ public class SdCardImageMover : IImageMover
         Console.WriteLine($"Moved {fileName} => {destFile}");
     }
 
-    public List<string> ListFiles() {
-        var extension = ".JPG";
-        return Directory.GetFiles(_sourceFolder, $"*{extension}").ToList();
+    private List<string> listFiles() {
+        //var extension = ".JPG";
+        return Directory.GetFiles(_sourceFolder, $"*").ToList();
     }
 
 }
@@ -98,11 +117,35 @@ public class SdCardImageMover : IImageMover
 public class CameraImageMover : IImageMover
 {
     private Execute _exe = new Execute();
-    public List<string> ListFiles()
+    public int MoveFiles(string destFolder, FujiRecipes? fujiRecipes)
+    {
+        var imageFiles = listFiles();
+        foreach (var file in imageFiles) {
+            //
+            moveFileLocally(file);
+            //
+            var md = new ImageMetadata(file);
+            string recipeName = "";
+            if ( fujiRecipes!=null && md.FujiCustomSettings != null ) {
+                recipeName = fujiRecipes.FindMatch(md.FujiCustomSettings);
+            }
+            // Only move files with a valid date
+            if ( ! (md.DateTime == default) ) {
+                moveFile(file, md, destFolder, recipeName);
+            }
+            //
+        }
+        return imageFiles.Count();
+    }
+    private List<string> listFiles()
     {
         var result = _exe.Run("gphoto2", "--list-files");
         if ( result != 0 ) {
-            throw new Exception($"Failed to run gphoto2: {_exe.StandardError}");
+            if ( _exe.StandardError.Contains("Could not claim the USB device") ) {
+                throw new Exception("Please unmount device from file manager or close any app that is using the camera.");
+            } else {
+                throw new Exception($"Failed to run gphoto2: {_exe.StandardError}");
+            }
         }
         var stdout = _exe.StandardOutput;
         var files = new List<string>();
@@ -119,8 +162,43 @@ public class CameraImageMover : IImageMover
         return files;
     }
 
-    public void Move(string file, ImageMetadata md, string destFolder, string recipeName)
+    private void moveFileLocally(string file)
     {
-        throw new NotImplementedException();
+        var result = _exe.Run("gphoto2", $"--get-file 1 --force-overwrite");
+        if ( result != 0 ) {
+            throw new Exception($"Failed to move file locally: {_exe.StandardError}");
+        }
+    }
+
+    private void deleteFileFromCamera()
+    {
+        var result = _exe.Run("gphoto2", $"--delete-file 1 --recurse");
+        if ( result != 0 ) {
+            throw new Exception($"Failed to delete file from camera: {_exe.StandardError}");
+        }
+    }
+
+    private void moveFile(string file, ImageMetadata md,string destFolder, string recipeName)
+    {
+        string year = md.DateTime.Year.ToString();
+        string month = ImageMoverFactory.Months[md.DateTime.Month-1];
+        //
+        string destDir = Path.Combine(destFolder, year, month);
+        Directory.CreateDirectory(destDir);
+        //
+        var fileName = Path.GetFileName(file);
+        if ( !string.IsNullOrEmpty(recipeName)) {
+            var ext = Path.GetExtension(file);
+            var fnNoExt = Path.GetFileNameWithoutExtension(file);
+            fileName = $"{fnNoExt} ({recipeName}){ext}";
+        }
+        //
+        string destFile = Path.Combine(destDir, fileName);        
+        // move the local copy
+        File.Move(file, destFile,true);
+        // delete the original file from the camera - always #1
+        deleteFileFromCamera();
+        //
+        Console.WriteLine($"Moved {file} => {destFile}");
     }
 }

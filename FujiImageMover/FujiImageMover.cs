@@ -26,22 +26,10 @@ public class FujiImageMover {
             fujiRecipes = new FujiRecipes(config.SetFujiFilmRecipe.ApiKey, config.SetFujiFilmRecipe.SpreadsheetId);
         }
 
-        // get all image files from the source folder        
-        var imageFiles = imageMover.ListFiles();
-        foreach (var file in imageFiles) {
-            var md = new ImageMetadata(file);
-            string recipeName = "";
-            if ( fujiRecipes!=null && md.FujiCustomSettings != null ) {
-                recipeName = fujiRecipes.FindMatch(md.FujiCustomSettings);
-            }
-            // mov file to new destination
-            imageMover.Move(file, md, config.DestinationFolder, recipeName);
-        }
-        Console.WriteLine($"[{imageFiles.Count()}] files processed");
+        int numMoved = imageMover.MoveFiles(destinationFolder, fujiRecipes);
+
+        Console.WriteLine($"[{numMoved}] files processed");
 
     }
 
-    private IEnumerable<string> ListFilesWithExtension(string directory, string extension) {
-        return Directory.GetFiles(directory, $"*{extension}", SearchOption.AllDirectories);
-    }
 }
