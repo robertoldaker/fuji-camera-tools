@@ -22,6 +22,18 @@
             "options": {
                 "cwd": "${workspaceFolder}/FujiImageMover",
             }
+        },
+        {
+            "label": "build ImageViewer.server",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/ImageViewer.server/ImageViewer.server.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }

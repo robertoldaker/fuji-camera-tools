@@ -17,6 +17,24 @@
             "args": [],
             "cwd": "${workspaceFolder}/FujiImageMover",
             "stopAtEntry": false,
+        },
+        {
+            "name": "ImageViewer (web)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build ImageViewer.server",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/ImageViewer.server/bin/Debug/net8.0/ImageViewer.server.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
         }
    ]
 }
