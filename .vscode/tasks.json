@@ -34,6 +34,16 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
-        }
+        },
+        {
+            "label": "killImageViewerClient",
+            "type": "shell",
+            "command": "pkill -9 -f \"ImageViewer.client\"",
+        },
+        {
+            "label": "killImageViewerServer",
+            "type": "shell",
+            "command": "pkill -9 -f \"ImageViewer.server\"",
+        },
     ]
 }

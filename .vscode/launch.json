@@ -19,14 +19,14 @@
             "stopAtEntry": false,
         },
         {
-            "name": "ImageViewer (web)",
+            "name": "ImageViewer (server)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build ImageViewer.server",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/ImageViewer.server/bin/Debug/net8.0/ImageViewer.server.dll",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/ImageViewer.server",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -35,6 +35,19 @@
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
+        },
+        {
+            "name": "ImageViewer (client)",
+            "type": "coreclr",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/ImageViewer.client",
+            "program": "dotnet",
+            "args": [
+                "watch",
+                "--project ImageViewer.client.csproj",
+                //"--verbose" // Let's us confirm browser connects with hot reload capabilities
+            ],
+            "postDebugTask": "killImageViewerClient"
         }
-   ]
+    ]
 }

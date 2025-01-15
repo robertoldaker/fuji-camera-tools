@@ -1,5 +1,6 @@
 
 using ImageViewer.client;
+using ImageViewer.server.Services;
 using ImageViewer.shared;
 
 namespace ImageViewer.server;
@@ -20,6 +21,9 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // add built in services
+        AddAppServices(builder);
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -39,9 +43,19 @@ public class Program
 
         //
         app.MapRazorPages();
-        app.MapControllers();
+        //??app.MapControllers();
+        app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller}/{action}");
         app.MapFallbackToFile("index.html");
 
         app.Run();
+    }
+
+    private static void AddAppServices(WebApplicationBuilder builder)
+    {
+        var config = Config.CreateConfig();
+        builder.Services.AddSingleton<Config>(config);
+        builder.Services.AddSingleton<ImageLibrary>(new ImageLibrary(config));
     }
 }
