@@ -1,0 +1,33 @@
+div.monthSelectorContainer {
+    padding: 0.5rem;
+}
+
+div.yearSelector {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #666
+}
+
+div.monthSelector {
+    font-size: 0.9rem;
+    font-weight: normal;
+    color: #666;
+    margin-left: 0.5rem;
+    margin-top: 3px;
+    cursor: pointer;    
+    border-right: 2px solid transparent;
+    padding-right: 6px;
+    text-align: right;
+}
+
+div.monthSelector:hover {
+    color: #333;
+    font-weight: bold;
+    border-right-color: #333;
+}
+
+div.monthSelector.selected {
+    color: #333;
+    font-weight: bold;
+    border-right-color: #333;
+}

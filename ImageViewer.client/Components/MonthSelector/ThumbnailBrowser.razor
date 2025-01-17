@@ -1,0 +1,41 @@
+<div>
+    @if ( imagesByDate!=null ) {
+        @foreach( var ibd in imagesByDate) {
+            <div class="dateTitle">@ibd.Date.ToString("MMM dd, yyyy")</div>
+            <div class="thumbnailsContainer">
+                @foreach( var imageInfo in ibd.Images) {
+                    <Thumbnail ImageInfo="@imageInfo"/>
+                }
+            </div>
+        }
+    } else {
+        <div>No images found</div>
+    }
+    <Button @onclick="editImage">edit image</Button>
+</div>
+
+@code {
+    [Inject]
+    private DataAccessService? DataAccessService {get; set;}
+
+    [Inject]
+    private MainDisplayService? MainDisplayService {get; set;}
+
+    protected List<ImagesByDate>? imagesByDate {get; set;}
+
+    protected override void OnInitialized()    {
+        if (DataAccessService != null) {
+            DataAccessService.ImagesByDateLoaded+=(e,data)=>{
+                Console.WriteLine($"ImagesByDateLoaded {data.Count}");
+                imagesByDate = data;
+                // Not sure on what conditions we need to do this??
+                StateHasChanged();
+            };
+        }
+    }
+
+    private void editImage() {
+        MainDisplayService?.SetShowState(MainDisplayService.ShowStateEnum.ImageEditor);
+    }
+
+}

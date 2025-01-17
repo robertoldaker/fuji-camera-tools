@@ -2,6 +2,7 @@
 using ImageViewer.client;
 using ImageViewer.server.Services;
 using ImageViewer.shared;
+using Config = ImageViewer.server.Services.Config;
 
 namespace ImageViewer.server;
 
@@ -21,6 +22,20 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // CORS
+        var corsPolicyName = "allowAll";
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(corsPolicyName,
+                                  builder => {
+                                      builder.WithOrigins("http://localhost:5016")
+                                             .AllowCredentials()
+                                             .AllowAnyHeader()
+                                             .AllowAnyMethod();
+                                  });
+        });
+
+
         // add built in services
         AddAppServices(builder);
 
@@ -34,6 +49,7 @@ public class Program
             app.UseWebAssemblyDebugging();
         }
 
+        app.UseCors(corsPolicyName);
         app.UseAuthorization();
 
         //

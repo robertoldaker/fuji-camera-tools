@@ -101,3 +101,16 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+/* new stuff that is shared */
+div.buttonImage {
+    
+}
+
+body {
+    overflow: hidden;
+}
+
+.hide {
+    display: none;
+}

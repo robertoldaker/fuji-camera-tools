@@ -1,0 +1,10 @@
+div.header {
+    height: 60px;
+    padding: 1.5rem;
+    background-color:#646D9B;
+    color: white;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

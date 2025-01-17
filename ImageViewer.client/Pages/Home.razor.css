@@ -1,0 +1,21 @@
+div.homeContainer {
+    display: grid;
+    grid-template-columns: 100px 1fr 300px;
+}
+
+div.months {
+    overflow-y: auto;
+    height: calc( 100vh - 60px );
+}
+
+div.mainDisplay {
+    border-left: 1px solid darkgray;
+    border-right: 1px solid darkgray;
+    overflow-y: auto;
+    height: calc( 100vh - 60px );
+}
+
+div.metadata {
+    overflow-y: auto;
+    height: calc( 100vh - 60px );
+}

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ImageViewer.server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("/ImageLibrary")]
 public class ImageLibraryController : ControllerBase
 {
     private readonly ILogger<ImageLibraryController> _logger;
@@ -24,7 +24,7 @@ public class ImageLibraryController : ControllerBase
     /// <param name="year">Year</param>
     /// <param name="month">Month (1-12)</param>
     /// <returns></returns> <summary>
-    [HttpGet("/ImagesByDate")]
+    [HttpGet("ImagesByDate")]
     public List<ImagesByDate> GetImagesByDate(int year, int month)
     {
         return _imageLibrary.GetImagesByDate(year, month);
@@ -34,7 +34,7 @@ public class ImageLibraryController : ControllerBase
     /// Get a list of the available months sorted by year
     /// </summary>
     /// <returns></returns> <summary>
-    [HttpGet("/MonthsByYear")]
+    [HttpGet("MonthsByYear")]
     public List<MonthsByYear> GetMonthsByYear()
     {
         return _imageLibrary.GetMonthsByYear();

@@ -1,0 +1,12 @@
+<div>Image editor!</div>
+<Button @onclick="OnClick">show thumbnails</Button>
+
+@code {
+
+    [Inject]
+    MainDisplayService? mainDisplayService {get; set;}
+
+    private void OnClick() {
+        mainDisplayService?.SetShowState(MainDisplayService.ShowStateEnum.Thumbnails);
+    }
+}

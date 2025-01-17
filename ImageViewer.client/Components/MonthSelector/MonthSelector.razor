@@ -1,0 +1,63 @@
+<div class="monthSelectorContainer">
+@if (_monthsByYear!=null) {
+    foreach (var item in _monthsByYear)
+    {
+        <div class="yearSelector">
+            @item.Year
+            @foreach (var month in item.Months)
+            {
+                <div class="monthSelector @getSelectedClass(item.Year,month)" @onclick="(e=>onMonthSelectedAsync(item.Year,month))">@_monthsDict[month]</div>
+            }
+        </div>
+    }
+} else {
+    <div>Loading...</div>
+}
+</div>
+
+@code {
+
+    private Dictionary<int, string> _monthsDict = new Dictionary<int, string>() {
+        {1, "Jan"},
+        {2, "Feb"},
+        {3, "Mar"},
+        {4, "Apr"},
+        {5, "May"},
+        {6, "Jun"},
+        {7, "Jul"},
+        {8, "Aug"},
+        {9, "Sep"},
+        {10, "Oct"},
+        {11, "Nov"},
+        {12, "Dec"}
+    };
+    private List<MonthsByYear>? _monthsByYear = null;
+    private int _selectedYear,_selectedMonth;
+
+    [Inject]
+    protected DataAccessService? DataAccessService { get; set; }
+
+    protected async override Task OnInitializedAsync()    {
+        if (DataAccessService != null) {
+            _monthsByYear = await DataAccessService.GetMonthsByYearAsync();
+            if ( _monthsByYear!=null && _monthsByYear.Count>0 && _monthsByYear[0].Months.Count>0) {
+                var year = _monthsByYear[0].Year;
+                var month = _monthsByYear[0].Months[0];
+                onMonthSelectedAsync(year, month);
+            }
+        }
+    }
+
+    private async void onMonthSelectedAsync(int year, int month) {
+        if (DataAccessService != null) {
+            _selectedYear = year;
+            _selectedMonth = month;
+            await DataAccessService.LoadNewThumbnails(year,month);
+        }
+    }
+
+    private string getSelectedClass(int year, int month) {
+        return (year == _selectedYear && month == _selectedMonth) ? "selected" : "";
+    }
+ 
+}

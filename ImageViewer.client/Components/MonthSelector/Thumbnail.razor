@@ -1,0 +1,32 @@
+<div class="thumbnailContainer">
+    <img src="@getThumbnailSrc()" class="thumbnailImage" @onclick="onThumbnailSelected"/>
+</div>
+
+@code {
+
+    [Inject]
+    DataAccessService? DataAccessService {get; set;}
+
+    [Inject]
+    MainDisplayService? MainDisplayService {get; set;}
+
+    [Parameter]
+    public ImageInfo? ImageInfo {get; set;}
+
+    string getThumbnailSrc() {
+        if ( ImageInfo!=null && DataAccessService!=null ) {
+            var id = ImageInfo.Id;
+            var encodedId = System.Net.WebUtility.UrlEncode(id);
+            var url = $"{DataAccessService.BaseAddress}ImageLibrary/Thumbnail?id={encodedId}";
+            Console.WriteLine(url);
+            return url;
+        } else {
+            // Should be an empty image or something??
+            return "";
+        }
+    }
+
+    void onThumbnailSelected() {
+        MainDisplayService?.SetShowState(MainDisplayService.ShowStateEnum.ImageEditor);
+    }
+}

@@ -1,0 +1,39 @@
+<div class="mainDisplayContainer">
+    <div class="@tnClass">
+        <ThumbnailBrowser />
+    </div>
+    <div class="@ieClass">
+        <ImageEditor />
+    </div>
+</div>
+
+@code {
+    [Inject]
+    private MainDisplayService? MainDisplayService {get; set;}
+
+    private string? tnClass {get; set;} 
+    private string? ieClass {get; set;}
+
+    protected override void OnInitialized() {
+        if ( MainDisplayService!=null) {
+            MainDisplayService.OnShowStateChanged+= (e,ss) => {
+                //
+                setVisibility();
+                StateHasChanged();
+            };
+            setVisibility();
+        }
+    }
+
+    private void setVisibility() {
+        if ( MainDisplayService!=null) {
+            if ( MainDisplayService.ShowState == MainDisplayService.ShowStateEnum.ImageEditor ) {
+                tnClass="hide";
+                ieClass = "";
+            } else {
+                tnClass = "";
+                ieClass="hide";
+            }
+        }
+    }
+}
