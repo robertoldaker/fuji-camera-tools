@@ -1,0 +1,77 @@
+<div class="imageEditorContainer">
+    <div class="imageEditorHeader">
+
+    </div>
+    @if ( _loadingImage ) {
+        <div>Loading ...</div>
+    } else {
+        <div class="mainImageContainer">
+            <div class="mainImageButton">
+                <Icon Name="IconName.ChevronLeft" @onclick="loadPrev"/>
+            </div>
+            <img class="mainImage" src="@getImageUrl()" @onclick="close"/>
+            <div class="mainImageButton">
+                <Icon Name="IconName.ChevronRight" @onclick="loadNext"/>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+
+    [Inject]
+    MainDisplayService? mainDisplayService {get; set;}
+
+    [Inject]
+    DataAccessService? dataAccessService {get; set;}
+
+    bool _loadingImage = false;
+    float _aspect_ratio = 0;
+
+    protected override void OnInitialized() {
+        if ( mainDisplayService!=null ) {
+            mainDisplayService.OnShowStateChanged += (e,ss)=> {
+                if ( mainDisplayService.ShowState == MainDisplayService.ShowStateEnum.ImageEditor ) {
+                    Console.WriteLine($"Loading new image [{mainDisplayService.SelectedImage.Id}]");
+                    _loadingImage = true;
+                    _aspect_ratio = mainDisplayService.SelectedImage.AspectRatio;
+                    StateHasChanged();
+                }
+            };
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender) {
+        if ( _loadingImage ) {
+            _loadingImage = false;
+            StateHasChanged();
+        }
+    }
+
+    private void close() {
+        mainDisplayService?.SetShowState(MainDisplayService.ShowStateEnum.Thumbnails);
+    }
+
+    private string getImageUrl() {
+        if ( mainDisplayService!=null && mainDisplayService.SelectedImage!=null && dataAccessService!=null) {
+            var id = mainDisplayService.SelectedImage.Id;
+            var encodedId = System.Net.WebUtility.UrlEncode(id);
+            var url = $"{dataAccessService.BaseAddress}ImageLibrary/Image?id={encodedId}";
+            return url;
+        } else {
+            return "";
+        }
+    }
+
+    private void loadPrev() {
+        if ( mainDisplayService!=null) {
+            mainDisplayService.SelectPrevImage();
+        }
+    }
+
+    private void loadNext() {
+        if ( mainDisplayService!=null) {
+            mainDisplayService.SelectNextImage();
+        }
+    }
+}

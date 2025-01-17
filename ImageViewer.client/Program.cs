@@ -12,11 +12,11 @@ public class Program
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
-        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5018") });
+        builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5018") });
 
         builder.Services.AddBlazorBootstrap();
 
-        builder.Services.AddScoped<DataAccessService>();
+        builder.Services.AddSingleton<DataAccessService>();
         builder.Services.AddSingleton<MainDisplayService>();
 
         await builder.Build().RunAsync();

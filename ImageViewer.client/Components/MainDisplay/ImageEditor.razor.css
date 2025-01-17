@@ -1,0 +1,30 @@
+div.imageEditorContainer {
+}
+
+div.imageEditorHeader {
+    height: 0px;
+    background-color: #77767b;
+}
+
+
+div.mainImageContainer {
+    display: flex;  
+    justify-content: center; 
+    align-items: center; 
+    margin-top: 20px;
+}
+
+div.mainImageButton {
+    cursor: pointer;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+img.mainImage {
+    border-radius: 20px;
+    max-height: calc( 100vh - 100px );
+    max-width: calc( 100vw - 550px );
+}
+
+
+

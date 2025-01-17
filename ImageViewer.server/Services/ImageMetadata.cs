@@ -9,8 +9,6 @@ public class ImageMetadata : ImageMetadataBase {
     public ImageMetadata(string imagePath) {
                 
         IEnumerable<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(imagePath);
-
-
         
         var subIfdDirectory = directories.OfType<ExifIfd0Directory>().FirstOrDefault();
         if (subIfdDirectory != null)
@@ -30,6 +28,9 @@ public class ImageMetadata : ImageMetadataBase {
             this.ExposureBias = directory.GetDescription(ExifDirectoryBase.TagExposureBias);
             this.ISO = directory.GetDescription(ExifDirectoryBase.TagIsoEquivalent);
             this.FocalLength = directory.GetDescription(ExifDirectoryBase.TagFocalLength);
+            //
+            this.Width = directory.GetInt32(ExifDirectoryBase.TagExifImageWidth);
+            this.Height = directory.GetInt32(ExifDirectoryBase.TagExifImageHeight);
         }
 
         if ( this.Make == "FUJIFILM" && this.Model == "X-E1") {

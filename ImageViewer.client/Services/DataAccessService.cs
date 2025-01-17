@@ -15,6 +15,10 @@ public class DataAccessService {
 
     public event EventHandler<List<ImagesByDate>>? ImagesByDateLoaded;
 
+    public List<ImagesByDate>? ImagesByDateList {get; set;}
+    public int Year {get; set;}
+    public int Month {get; set;}
+
     public string BaseAddress {
         get {
             return _httpClient.BaseAddress!.ToString();
@@ -26,14 +30,16 @@ public class DataAccessService {
         return data!;
     }
 
-    public async Task<List<ImagesByDate>> GetImagesByDateAsync(int year, int month) {
+    private async Task<List<ImagesByDate>> GetImagesByDateAsync(int year, int month) {
         var data = await _httpClient.GetFromJsonAsync<List<ImagesByDate>>($"ImageLibrary/ImagesByDate?year={year}&month={month}");
         return data!;
     }
 
     public async Task LoadNewThumbnails(int year, int month) {
-        var data = await GetImagesByDateAsync(year, month);
-        ImagesByDateLoaded?.Invoke(this,data);
+        ImagesByDateList = await GetImagesByDateAsync(year, month);
+        Year = year;
+        Month = month;
+        ImagesByDateLoaded?.Invoke(this,ImagesByDateList);
     }
 
 }

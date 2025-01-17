@@ -1,12 +1,18 @@
-<div>
+<div class="thumbnailBrowserContainer">
     @if ( imagesByDate!=null ) {
+        int dateIndex=0;
         @foreach( var ibd in imagesByDate) {
             <div class="dateTitle">@ibd.Date.ToString("MMM dd, yyyy")</div>
             <div class="thumbnailsContainer">
-                @foreach( var imageInfo in ibd.Images) {
-                    <Thumbnail ImageInfo="@imageInfo"/>
+                @{
+                    int imageIndex=0;
+                    foreach( var imageInfo in ibd.Images) {
+                        <Thumbnail ImageInfo="@imageInfo" DateIndex="@dateIndex" ImageIndex="@imageIndex"/>
+                        imageIndex++;
+                    }
                 }
             </div>
+            dateIndex++;
         }
     } else {
         <div>No images found</div>

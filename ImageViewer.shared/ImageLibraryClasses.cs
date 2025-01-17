@@ -1,4 +1,6 @@
-﻿namespace ImageViewer.shared;
+﻿using System.Reflection;
+
+namespace ImageViewer.shared;
 
 public class ImagesByDate {
     public ImagesByDate(DateTime date) {
@@ -10,12 +12,14 @@ public class ImagesByDate {
 }
 
 public class ImageInfo {
-    public ImageInfo(string id, bool inGooglePhotos) {
+    public ImageInfo(string id, float aspectRatio, bool inGooglePhotos) {
         Id = id;
+        AspectRatio = aspectRatio;
         InGooglePhotos = inGooglePhotos;
     }
     public string Id {get; set;}
     public bool InGooglePhotos {get; set;}
+    public float AspectRatio {get; set;}
 }
 
 public class MonthsByYear {
@@ -37,6 +41,8 @@ public class ImageMetadataBase {
     public string? ExposureBias {get; set;}
     public string? ISO {get; set;}
     public string? FocalLength {get; set;}
+    public int Width {get; set;}
+    public int Height {get; set;}
     public FujiCustomSettingsBase? FujiCustomSettings {get; set;}
 }
 

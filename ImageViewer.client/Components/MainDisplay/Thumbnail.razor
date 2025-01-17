@@ -5,20 +5,24 @@
 @code {
 
     [Inject]
-    DataAccessService? DataAccessService {get; set;}
+    DataAccessService? dataAccessService {get; set;}
 
     [Inject]
-    MainDisplayService? MainDisplayService {get; set;}
+    MainDisplayService? mainDisplayService {get; set;}
 
     [Parameter]
     public ImageInfo? ImageInfo {get; set;}
 
+    [Parameter]
+    public int DateIndex {get; set;}
+    [Parameter]
+    public int ImageIndex {get; set;}
+
     string getThumbnailSrc() {
-        if ( ImageInfo!=null && DataAccessService!=null ) {
+        if ( ImageInfo!=null && dataAccessService!=null ) {
             var id = ImageInfo.Id;
             var encodedId = System.Net.WebUtility.UrlEncode(id);
-            var url = $"{DataAccessService.BaseAddress}ImageLibrary/Thumbnail?id={encodedId}";
-            Console.WriteLine(url);
+            var url = $"{dataAccessService.BaseAddress}ImageLibrary/Thumbnail?id={encodedId}";
             return url;
         } else {
             // Should be an empty image or something??
@@ -27,6 +31,8 @@
     }
 
     void onThumbnailSelected() {
-        MainDisplayService?.SetShowState(MainDisplayService.ShowStateEnum.ImageEditor);
+        if ( ImageInfo!=null ) {
+            mainDisplayService?.SelectImage(DateIndex,ImageIndex);
+        }
     }
 }

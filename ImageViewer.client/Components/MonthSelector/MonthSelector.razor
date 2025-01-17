@@ -2,13 +2,11 @@
 @if (_monthsByYear!=null) {
     foreach (var item in _monthsByYear)
     {
-        <div class="yearSelector">
-            @item.Year
+        <div class="yearSelector">@item.Year</div>
             @foreach (var month in item.Months)
             {
                 <div class="monthSelector @getSelectedClass(item.Year,month)" @onclick="(e=>onMonthSelectedAsync(item.Year,month))">@_monthsDict[month]</div>
             }
-        </div>
     }
 } else {
     <div>Loading...</div>
