@@ -5,10 +5,10 @@
 @code {
 
     [Inject]
-    DataAccessService? dataAccessService {get; set;}
+    ImageLibraryService? imageLibraryService {get; set;}
 
     [Inject]
-    MainDisplayService? mainDisplayService {get; set;}
+    DataAccessService? dataAccessService {get; set;}
 
     [Parameter]
     public ImageInfo? ImageInfo {get; set;}
@@ -32,7 +32,7 @@
 
     void onThumbnailSelected() {
         if ( ImageInfo!=null ) {
-            mainDisplayService?.SelectImage(DateIndex,ImageIndex);
+            imageLibraryService?.SelectImage(DateIndex,ImageIndex);
         }
     }
 }

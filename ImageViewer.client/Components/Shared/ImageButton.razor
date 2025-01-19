@@ -1,6 +1,8 @@
-<div class="imageButtonContainer" @onclick="OnClick">
-    @ChildContent
-</div>
+<Tooltip Title="@Tooltip" Placement="@TooltipPlacement">
+    <div class="imageButtonContainer" @onclick="OnClick">
+            @ChildContent
+    </div>
+</Tooltip>
 
 @code {
     [Parameter]
@@ -8,4 +10,10 @@
 
     [Parameter]
     public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public string Tooltip {get; set;} = "";
+
+    [Parameter]
+    public TooltipPlacement TooltipPlacement {get; set;} = TooltipPlacement.Right;
 }

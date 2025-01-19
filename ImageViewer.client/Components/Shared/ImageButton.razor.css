@@ -1,4 +1,9 @@
 div.imageButtonContainer {
     padding:0.5rem;
+    opacity: 0.5;
     cursor: pointer;
+}
+
+div.imageButtonContainer:hover {
+    opacity: 1;
 }

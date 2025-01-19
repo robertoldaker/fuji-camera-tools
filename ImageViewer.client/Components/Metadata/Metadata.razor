@@ -1,0 +1,25 @@
+<div>
+    @_metadata.DateTime
+</div>
+
+@code {
+    [Inject]
+    DataAccessService? dataAccessService {get; set;}
+
+    [Inject]
+    ImageLibraryService? imageLibraryService {get; set;}
+
+    private ImageMetadataBase _metadata = new ImageMetadataBase();
+
+    protected override void OnInitialized() {
+        if (imageLibraryService != null && dataAccessService!=null)
+        {
+            imageLibraryService.NewMetadataLoaded += (e, imageMetadata) =>
+            {
+                _metadata = imageMetadata;
+                Console.WriteLine($"New metaadata loaded [{imageMetadata.DateTime}]");
+                StateHasChanged();
+            };
+        }
+    }
+}

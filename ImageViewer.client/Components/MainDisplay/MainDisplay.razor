@@ -9,14 +9,14 @@
 
 @code {
     [Inject]
-    private MainDisplayService? MainDisplayService {get; set;}
+    MainDisplayService? mainDisplayService {get; set;}
 
-    private string? tnClass {get; set;} 
-    private string? ieClass {get; set;}
+    string? tnClass {get; set;} 
+    string? ieClass {get; set;}
 
     protected override void OnInitialized() {
-        if ( MainDisplayService!=null) {
-            MainDisplayService.OnShowStateChanged+= (e,ss) => {
+        if ( mainDisplayService!=null) {
+            mainDisplayService.OnShowStateChanged+= (e,ss) => {
                 //
                 setVisibility();
                 StateHasChanged();
@@ -26,8 +26,8 @@
     }
 
     private void setVisibility() {
-        if ( MainDisplayService!=null) {
-            if ( MainDisplayService.ShowState == MainDisplayService.ShowStateEnum.ImageEditor ) {
+        if ( mainDisplayService!=null) {
+            if ( mainDisplayService.ShowState == MainDisplayService.ShowStateEnum.ImageEditor ) {
                 tnClass="hide";
                 ieClass = "";
             } else {

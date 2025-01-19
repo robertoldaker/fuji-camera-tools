@@ -12,14 +12,12 @@ public class ImagesByDate {
 }
 
 public class ImageInfo {
-    public ImageInfo(string id, float aspectRatio, bool inGooglePhotos) {
+    public ImageInfo(string id, bool inGooglePhotos) {
         Id = id;
-        AspectRatio = aspectRatio;
         InGooglePhotos = inGooglePhotos;
     }
     public string Id {get; set;}
     public bool InGooglePhotos {get; set;}
-    public float AspectRatio {get; set;}
 }
 
 public class MonthsByYear {

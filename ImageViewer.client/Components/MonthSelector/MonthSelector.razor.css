@@ -7,19 +7,20 @@ div.yearSelector {
     font-weight: bold;
     color: #666;
     text-align: right;
-    margin-right: 3px;
+    margin-right: 6px;
+    margin-bottom: 3px;
 }
 
 div.monthSelector {
     font-size: 0.9rem;
     font-weight: normal;
     color: #666;
-    margin-left: 0.5rem;
-    margin-top: 3px;
+    margin-bottom: 0.7rem;
     cursor: pointer;    
     border-right: 2px solid transparent;
     padding-right: 6px;
     text-align: right;
+    line-height: 100%;
 }
 
 div.monthSelector:hover {

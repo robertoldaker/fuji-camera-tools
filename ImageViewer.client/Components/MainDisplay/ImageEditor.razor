@@ -1,77 +1,112 @@
 <div class="imageEditorContainer">
-    <div class="imageEditorHeader">
-
-    </div>
-    @if ( _loadingImage ) {
-        <div>Loading ...</div>
-    } else {
+    <div class="imageEditorInnerContainer">
+        <div class="imageEditorToolbar">
+            <ImageButton Tooltip="Back" OnClick="close">
+                <Icon Name="IconName.ArrowLeftCircle"></Icon>
+            </ImageButton>
+            <div class="toolbarSeparator"></div>
+            <ImageButton Tooltip="Rotate 90 deg. clockwise">
+                <Icon Name="IconName.ArrowClockwise"></Icon>
+            </ImageButton>
+            <ImageButton Tooltip="Rotate 90 deg. anti-clockwise">
+                <Icon Name="IconName.ArrowCounterclockwise"></Icon>
+            </ImageButton>
+            <ImageButton Tooltip="Edit external editor">
+                <Icon Name="IconName.Pencil"></Icon>
+            </ImageButton>
+            <ImageButton Tooltip="Delete">
+                <Icon Name="IconName.Trash"></Icon>
+            </ImageButton>
+            <ImageButton Tooltip="Upload to Google photos">
+                <Icon Name="IconName.CloudUpload"></Icon>
+            </ImageButton>
+        </div>
         <div class="mainImageContainer">
             <div class="mainImageButton">
-                <Icon Name="IconName.ChevronLeft" @onclick="loadPrev"/>
+                <ImageButton Tooltip="Prev image">
+                    <Icon Name="IconName.ChevronLeft" @onclick="loadPrev" />
+                </ImageButton>
             </div>
-            <img class="mainImage" src="@getImageUrl()" @onclick="close"/>
+            <img class="mainImage @(_loadingImage ? "loading" : "")" src="@getImageUrl()"  @onload="imageLoaded"/>
             <div class="mainImageButton">
-                <Icon Name="IconName.ChevronRight" @onclick="loadNext"/>
+                <ImageButton Tooltip="Next image">
+                    <Icon Name="IconName.ChevronRight" @onclick="loadNext" />
+                </ImageButton>
             </div>
         </div>
-    }
+    </div>
 </div>
 
 @code {
 
     [Inject]
-    MainDisplayService? mainDisplayService {get; set;}
+    ImageLibraryService? imageLibraryService { get; set; }
 
     [Inject]
-    DataAccessService? dataAccessService {get; set;}
+    MainDisplayService? mainDisplayService { get; set; }
+
+    [Inject]
+    DataAccessService? dataAccessService { get; set; }
 
     bool _loadingImage = false;
-    float _aspect_ratio = 0;
 
-    protected override void OnInitialized() {
-        if ( mainDisplayService!=null ) {
-            mainDisplayService.OnShowStateChanged += (e,ss)=> {
-                if ( mainDisplayService.ShowState == MainDisplayService.ShowStateEnum.ImageEditor ) {
-                    Console.WriteLine($"Loading new image [{mainDisplayService.SelectedImage.Id}]");
-                    _loadingImage = true;
-                    _aspect_ratio = mainDisplayService.SelectedImage.AspectRatio;
-                    StateHasChanged();
-                }
+    protected override void OnInitialized()
+    {
+        if (imageLibraryService != null)
+        {
+            imageLibraryService.NewImageSelected += (e, selectedImage) =>
+            {
+                Console.WriteLine($"Loading new image [{selectedImage.Id}]");
+                _loadingImage = true;
+                StateHasChanged();
             };
         }
     }
 
-    protected override void OnAfterRender(bool firstRender) {
-        if ( _loadingImage ) {
-            _loadingImage = false;
-            StateHasChanged();
-        }
+    protected override void OnAfterRender(bool firstRender)
+    {
+
     }
 
-    private void close() {
+    private void close()
+    {
         mainDisplayService?.SetShowState(MainDisplayService.ShowStateEnum.Thumbnails);
     }
 
-    private string getImageUrl() {
-        if ( mainDisplayService!=null && mainDisplayService.SelectedImage!=null && dataAccessService!=null) {
-            var id = mainDisplayService.SelectedImage.Id;
+    private string getImageUrl()
+    {
+        if (imageLibraryService != null && imageLibraryService.SelectedImage != null && dataAccessService != null)
+        {
+            var id = imageLibraryService.SelectedImage.Id;
             var encodedId = System.Net.WebUtility.UrlEncode(id);
             var url = $"{dataAccessService.BaseAddress}ImageLibrary/Image?id={encodedId}";
             return url;
-        } else {
+        }
+        else
+        {
             return "";
         }
     }
 
-    private void loadPrev() {
-        if ( mainDisplayService!=null) {
-            mainDisplayService.SelectPrevImage();
+    private void loadPrev()
+    {
+        if (imageLibraryService != null)
+        {
+            imageLibraryService.SelectPrevImage();
         }
     }
 
-    private void loadNext() {
-        if ( mainDisplayService!=null) {
-            mainDisplayService.SelectNextImage();
+    private void loadNext()
+    {
+        if (imageLibraryService != null)
+        {
+            imageLibraryService.SelectNextImage();
         }
+    }
+
+    private void imageLoaded() {
+        Console.WriteLine("imageLoaded");
+        _loadingImage = false;
+        StateHasChanged();
     }
 }

@@ -33,24 +33,40 @@
     private int _selectedYear,_selectedMonth;
 
     [Inject]
-    protected DataAccessService? DataAccessService { get; set; }
+    ImageLibraryService? imageLibraryService { get; set; }
 
-    protected async override Task OnInitializedAsync()    {
-        if (DataAccessService != null) {
-            _monthsByYear = await DataAccessService.GetMonthsByYearAsync();
-            if ( _monthsByYear!=null && _monthsByYear.Count>0 && _monthsByYear[0].Months.Count>0) {
-                var year = _monthsByYear[0].Year;
-                var month = _monthsByYear[0].Months[0];
-                onMonthSelectedAsync(year, month);
-            }
+    [Inject]
+    MainDisplayService? mainDisplayService {get; set;}
+
+    protected override void OnInitialized()    {
+        if (imageLibraryService != null) {
+            if ( imageLibraryService.MonthsByYear!=null) {
+                _monthsByYear = imageLibraryService.MonthsByYear;
+                selectFirstMonth();
+                StateHasChanged();
+            } 
+            imageLibraryService.MonthsByYearLoaded+= (e,monthsByYear) => {
+                _monthsByYear = monthsByYear;
+                selectFirstMonth();
+                StateHasChanged();
+            };    
+        }
+    }
+
+    private void selectFirstMonth() {
+        if ( _monthsByYear!=null && _monthsByYear.Count>0 && _monthsByYear[0].Months.Count>0) {
+            var year = _monthsByYear[0].Year;
+            var month = _monthsByYear[0].Months[0];
+            onMonthSelectedAsync(year, month);
         }
     }
 
     private async void onMonthSelectedAsync(int year, int month) {
-        if (DataAccessService != null) {
+        if (imageLibraryService != null) {
             _selectedYear = year;
             _selectedMonth = month;
-            await DataAccessService.LoadNewThumbnails(year,month);
+            await imageLibraryService.LoadNewThumbnailsAsync(year,month);
+            mainDisplayService?.SetShowState(MainDisplayService.ShowStateEnum.Thumbnails);
         }
     }
 

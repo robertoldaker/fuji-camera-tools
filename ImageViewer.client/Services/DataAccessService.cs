@@ -6,18 +6,11 @@ using Microsoft.VisualBasic;
 namespace ImageViewer.client.Services;
 
 public class DataAccessService {
-    public List<MonthsByYear>? MonthsByYear { get; set; }
     private readonly HttpClient _httpClient;
     
     public DataAccessService(HttpClient httpClient) {
         _httpClient = httpClient;
     }
-
-    public event EventHandler<List<ImagesByDate>>? ImagesByDateLoaded;
-
-    public List<ImagesByDate>? ImagesByDateList {get; set;}
-    public int Year {get; set;}
-    public int Month {get; set;}
 
     public string BaseAddress {
         get {
@@ -30,16 +23,15 @@ public class DataAccessService {
         return data!;
     }
 
-    private async Task<List<ImagesByDate>> GetImagesByDateAsync(int year, int month) {
+    public async Task<List<ImagesByDate>> GetImagesByDateAsync(int year, int month) {
         var data = await _httpClient.GetFromJsonAsync<List<ImagesByDate>>($"ImageLibrary/ImagesByDate?year={year}&month={month}");
         return data!;
     }
 
-    public async Task LoadNewThumbnails(int year, int month) {
-        ImagesByDateList = await GetImagesByDateAsync(year, month);
-        Year = year;
-        Month = month;
-        ImagesByDateLoaded?.Invoke(this,ImagesByDateList);
+    public async Task<ImageMetadataBase> GetImageMetadataAsync(string id) {
+        var encodedId = System.Net.WebUtility.UrlEncode(id);
+        var data = await _httpClient.GetFromJsonAsync<ImageMetadataBase>($"ImageLibrary/ImageMetadata?id={encodedId}");
+        return data!;
     }
 
 }

@@ -113,8 +113,7 @@ public class ImageLibrary
                     imagesByDate = new ImagesByDate(date);
                     imagesByDateList.Add(imagesByDate);
                 }
-                float aspectRatio =(float) i.Metadata.Width/ (float) i.Metadata.Height;
-                imagesByDate!.Images.Add(new ImageViewer.shared.ImageInfo(i.Id, aspectRatio, false));
+                imagesByDate!.Images.Add(new ImageViewer.shared.ImageInfo(i.Id, false));
             }
         }
         return imagesByDateList;
