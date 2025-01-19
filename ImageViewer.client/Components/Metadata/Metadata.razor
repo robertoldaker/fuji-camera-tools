@@ -1,5 +1,44 @@
-<div>
-    @_metadata.DateTime
+<div class="metadataContainer">
+    <table class="metadataTable">
+        <tr>
+            <td>Timestamp</td>
+            <td>@(_metadata.DateTime.ToString("MMM dd, yyyy hh:mm"))</td>
+        </tr>
+        <tr>
+            <td>Make/model</td>
+            <td>@(_metadata.Make) / @(_metadata.Model)</td>
+        </tr>
+        <tr>
+            <td>Aperture</td>
+            <td>@(_metadata.Aperture)</td>
+        </tr>
+        <tr>
+            <td>Shutter speed</td>
+            <td>@(_metadata.ShutterSpeed)</td>
+        </tr>
+        <tr>
+            <td>Exposure bias</td>
+            <td>@(_metadata.ExposureBias)</td>
+        </tr>
+        <tr>
+            <td>ISO</td>
+            <td>@(_metadata.ISO)</td>
+        </tr>
+        <tr>
+            <td>Focal length</td>
+            <td>@(_metadata.FocalLength)</td>
+        </tr>
+        <tr>
+            <td>Image size</td>
+            <td>@(_metadata.Width) x @(_metadata.Height)</td>
+        </tr>
+        @if( _metadata.FujiCustomSettings!=null) {
+            <tr>
+                <td>Film recipe</td>
+                <td>@(_metadata.FujiCustomSettings.FilmRecipe)</td>
+            </tr>
+        }
+    </table>
 </div>
 
 @code {
@@ -17,7 +56,6 @@
             imageLibraryService.NewMetadataLoaded += (e, imageMetadata) =>
             {
                 _metadata = imageMetadata;
-                Console.WriteLine($"New metaadata loaded [{imageMetadata.DateTime}]");
                 StateHasChanged();
             };
         }

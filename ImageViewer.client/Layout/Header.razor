@@ -1,15 +1,20 @@
+<Modal @ref="modal" />
 <div class="header">
     <div>ImageViewer v1.0.0</div>
     <div>
-        <ImageButton OnClick="OnClick">
+        <ImageButton OnClick="OnShowModalClick">
             <Icon Name="IconName.Gear" />
         </ImageButton>
     </div>
 </div>
 
 @code {
-    private void OnClick()
+    Modal modal = default!;
+
+    private async Task OnShowModalClick()
     {
-        Console.WriteLine("Settings clicked");
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("modal", modal);
+        await modal.ShowAsync<Settings>(title: "Settings", parameters: parameters);
     }
 }

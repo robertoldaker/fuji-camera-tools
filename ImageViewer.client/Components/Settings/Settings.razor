@@ -1,0 +1,26 @@
+<div>
+    <table>
+        <tr>
+            <td>Image folder</td>
+            <td><InputText @bin-Value="@_folder"/></td>
+        </tr>
+    </table>
+</div>
+
+<Button Color="ButtonColor.Primary">Save changes</Button>
+<Button Color="ButtonColor.Secondary" Outline="true" @onclick="close">Close</Button>
+
+@code {
+
+
+
+    [Parameter]
+    public Modal? modal {get; set;}
+
+    private string _folder = "this is async folder";
+
+    private async Task close()
+    {
+        await modal!.HideAsync();
+    }
+}

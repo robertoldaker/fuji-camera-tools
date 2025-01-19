@@ -53,4 +53,10 @@ public class Config
             config.GooglePhotosConfig.Enabled = GooglePhotosConfig.Enabled;
             // copy google photos stuff here
         }
+
+        public void Save() {
+            var configFile = getConfigFile();
+            string json = JsonSerializer.Serialize(this, new JsonSerializerOptions() { WriteIndented = true });
+            File.WriteAllText(configFile, json);       
+        }
     }

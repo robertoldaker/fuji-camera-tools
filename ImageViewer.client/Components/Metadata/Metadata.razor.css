@@ -1,0 +1,12 @@
+div.metadataContainer {
+    padding: 1rem;
+}
+table.metadataTable {
+    font-size: 0.9rem;
+}
+
+table.metadataTable > tr > td:nth-child(1) {
+    font-size: 0.8rem;
+    padding-right: 0.5rem;
+    font-weight: bold;
+}

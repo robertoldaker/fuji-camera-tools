@@ -56,7 +56,6 @@
         {
             imageLibraryService.NewImageSelected += (e, selectedImage) =>
             {
-                Console.WriteLine($"Loading new image [{selectedImage.Id}]");
                 _loadingImage = true;
                 StateHasChanged();
             };
@@ -105,7 +104,6 @@
     }
 
     private void imageLoaded() {
-        Console.WriteLine("imageLoaded");
         _loadingImage = false;
         StateHasChanged();
     }
