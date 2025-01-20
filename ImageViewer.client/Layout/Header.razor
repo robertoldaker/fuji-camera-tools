@@ -1,4 +1,3 @@
-<Modal @ref="modal" />
 <div class="header">
     <div>ImageViewer v1.0.0</div>
     <div>
@@ -9,12 +8,17 @@
 </div>
 
 @code {
-    Modal modal = default!;
+
+    [Inject]
+    ModalsService? modalsService {get; set;}
 
     private async Task OnShowModalClick()
     {
-        var parameters = new Dictionary<string, object>();
-        parameters.Add("modal", modal);
-        await modal.ShowAsync<Settings>(title: "Settings", parameters: parameters);
+        //var parameters = new Dictionary<string, object>();
+        //parameters.Add("modal", modal);
+        //await modal.ShowAsync<Settings>(title: "Settings", parameters: parameters);
+        if ( modalsService!=null ) {
+            modalsService.Show("Settings");
+        }
     }
 }

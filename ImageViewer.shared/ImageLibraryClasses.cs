@@ -92,6 +92,29 @@ public class FujiCustomSettingsBase {
     public int Sharpness {get; set; }
     public int ShadowTone {get; set; }
     public int HighlightTone {get; set; }
+    public string GetWhiteBalanceStr() {
+        var wbStr = WhiteBalance == WhiteBalance.Kelvin ? $"{WhiteBalanceTemp}K" : $"{WhiteBalance}";
+        return $"{wbStr} (R {WhiteBalanceShift[0]}, B {WhiteBalanceShift[1]})";
+    }
+}
+
+public class ConfigBase {
+    public ConfigBase() {
+        // set defaults
+        ImageFolder = "";
+        GooglePhotosConfig = new GooglePhotosConfigClass();
+        //
+    }
+    public string ImageFolder {get; set;} = "";
+    public GooglePhotosConfigClass GooglePhotosConfig { get; set; }
+    
+    public class GooglePhotosConfigClass {
+        public GooglePhotosConfigClass() {
+            Enabled = false;
+        }
+        public bool Enabled { get; set; }
+        // add google photos stuff here
+    }
 
 }
  

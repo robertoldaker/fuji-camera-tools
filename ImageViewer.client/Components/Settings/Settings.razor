@@ -1,26 +1,80 @@
-<div>
-    <table>
-        <tr>
-            <td>Image folder</td>
-            <td><InputText @bin-Value="@_folder"/></td>
-        </tr>
-    </table>
-</div>
+@inherits ModalBase
 
-<Button Color="ButtonColor.Primary">Save changes</Button>
-<Button Color="ButtonColor.Secondary" Outline="true" @onclick="close">Close</Button>
+<Modal @ref="Modal" Title="Settings!" OnShowing="onShowingAsync">
+    <BodyTemplate>
+        <div>    
+            <table class="settingsTable">
+                <tr>
+                    <td>Image folder!</td>
+                    <td>
+                        <InputText @bind-Value="@_config.ImageFolder"/>
+                        <ErrorText @ref=@(_errorTexts["imageFolder"])></ErrorText>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Use google photos</td>
+                    <td><InputCheckbox @bind-Value="_config.GooglePhotosConfig.Enabled"/></td>
+                </tr>
+            </table>
+        </div>
+        <div class="footer">
+            <Button Color="ButtonColor.Primary" @onclick="save">OK</Button>&nbsp;&nbsp;
+            <Button Color="ButtonColor.Secondary" Outline="true" @onclick="close">Cancel</Button>
+        </div>
+    </BodyTemplate>
+</Modal>
 
 @code {
 
+    [Inject]
+    DataAccessService? dataAccessService {get ;set;}
 
+    [Inject]
+    ModalsService? modalsService {get ;set;}
 
-    [Parameter]
-    public Modal? modal {get; set;}
+    public Settings() {
+        _errorTexts.Add("imageFolder",null);
+    }
+    
+    ErrorText? _errorText;
 
-    private string _folder = "this is async folder";
+    protected async override Task OnInitializedAsync() {
+        if ( modalsService!=null) {
+            modalsService.Register(this,"Settings");
+        } else {
+            Console.WriteLine("null modalsService");
+        }
+    }
+
+    private ConfigBase _config = new ConfigBase();
 
     private async Task close()
     {
-        await modal!.HideAsync();
+        await Modal!.HideAsync();
+    }
+
+    private async Task onShowingAsync() {
+        if ( dataAccessService!=null ) {
+            _config = await dataAccessService.GetConfigAsync();
+            Console.WriteLine($"onShowing [{_config.ImageFolder}]");
+        }
+
+    }
+
+    private async Task save() {  
+        Console.WriteLine(_config.ImageFolder);
+        Console.WriteLine(_config.GooglePhotosConfig.Enabled);
+        if ( dataAccessService!=null ) {
+            var mess = await dataAccessService.SetConfigAsync(_config);
+            if ( (int) mess.StatusCode == 422) {
+                var errors = await mess.Content.ReadFromJsonAsync<Dictionary<string,string>>();
+                if ( errors!=null ) {
+                    UpdateErrors(errors);
+                }
+            } else {
+                Console.WriteLine($"Statuscode = [{mess.StatusCode}]");
+            }
+        }
+
     }
 }

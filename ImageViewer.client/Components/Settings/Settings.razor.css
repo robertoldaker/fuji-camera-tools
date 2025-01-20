@@ -1,0 +1,12 @@
+div.footer {
+    margin-top: 2rem;
+    text-align: right;
+}
+
+table.settingsTable > tr > td:first-child {
+    padding-right: 1rem;
+}
+
+table.settingsTable > tr > td {
+    padding-top: 1rem;
+}

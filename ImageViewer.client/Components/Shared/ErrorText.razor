@@ -1,0 +1,11 @@
+<div class="error">
+    @_error
+</div>
+
+@code {
+    private string _error {get; set;} = "";
+    public void SetError(string error) {
+        _error=error;
+        StateHasChanged();
+    }
+}

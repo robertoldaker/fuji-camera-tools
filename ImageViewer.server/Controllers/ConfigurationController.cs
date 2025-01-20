@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace ImageViewer.server.Controllers;
 
 [ApiController]
-[Route("/Settings")]
-public class SettingsController : ControllerBase
+[Route("/Configuration")]
+public class ConfigurationController : ControllerBase
 {
     private Services.Config _config;
     
-    public SettingsController(Services.Config config) {
+    public ConfigurationController(Services.Config config) {
         _config = config;
     }
 
@@ -18,7 +18,7 @@ public class SettingsController : ControllerBase
     /// Return the config
     /// </summary>
     /// <returns></returns>
-    [HttpGet("/Config")]
+    [HttpGet("Config")]
     public Services.Config GetConfig() {
         return _config;
     }
@@ -27,8 +27,14 @@ public class SettingsController : ControllerBase
     /// Updates config
     /// </summary>
     /// <param name="config"></param>
-    [HttpPost("/Config")]
-    public void SetConfig([FromBody] Services.Config config) {
-        config.Save();
+    [HttpPost("Config")]
+    public IActionResult SetConfig([FromBody] Services.Config config) {    
+        var errors = config.CheckModel();
+        if ( errors.Count > 0 ) {
+            return this.ModelErrors(errors);
+        } else {
+            config.Save();
+            return Ok();
+        }
     }
 }

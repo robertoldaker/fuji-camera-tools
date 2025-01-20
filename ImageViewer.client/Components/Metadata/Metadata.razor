@@ -1,6 +1,9 @@
 <div class="metadataContainer">
     <table class="metadataTable">
         <tr>
+            <td colspan="="2" class="sectionTitle">General</td>
+        </tr>
+        <tr>
             <td>Timestamp</td>
             <td>@(_metadata.DateTime.ToString("MMM dd, yyyy hh:mm"))</td>
         </tr>
@@ -34,8 +37,39 @@
         </tr>
         @if( _metadata.FujiCustomSettings!=null) {
             <tr>
+                <td colspan="="2" class="sectionTitle">Fujifilm</td>
+            </tr>
+            <tr>
                 <td>Film recipe</td>
                 <td>@(_metadata.FujiCustomSettings.FilmRecipe)</td>
+            </tr>
+            <tr>
+                <td>Film simulation</td>
+                <td>@(_metadata.FujiCustomSettings.FilmSimulation)</td>
+            </tr>
+            <tr>
+                <td>Dynamic range</td>
+                <td>@(_metadata.FujiCustomSettings.DynamicRange)</td>
+            </tr>
+            <tr>
+                <td>White balance</td>
+                <td>@(_metadata.FujiCustomSettings.GetWhiteBalanceStr())</td>
+            </tr>
+            <tr>
+                <td>Colour</td>
+                <td>@(_metadata.FujiCustomSettings.Color)</td>
+            </tr>
+            <tr>
+                <td>Sharpness</td>
+                <td>@(_metadata.FujiCustomSettings.Sharpness)</td>
+            </tr>
+            <tr>
+                <td>Highlight tone</td>
+                <td>@(_metadata.FujiCustomSettings.HighlightTone)</td>
+            </tr>
+            <tr>
+                <td>Shadow tone</td>
+                <td>@(_metadata.FujiCustomSettings.ShadowTone)</td>
             </tr>
         }
     </table>

@@ -1,5 +1,7 @@
 div.metadataContainer {
-    padding: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
 }
 table.metadataTable {
     font-size: 0.9rem;
@@ -9,4 +11,10 @@ table.metadataTable > tr > td:nth-child(1) {
     font-size: 0.8rem;
     padding-right: 0.5rem;
     font-weight: bold;
+}
+
+table.metadataTable > tr > td.sectionTitle {
+    font-size: 0.9rem;
+    color: darkblue;
+    padding-top: 0.5rem;
 }

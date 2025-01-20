@@ -19,6 +19,7 @@ public class Program
         builder.Services.AddSingleton<DataAccessService>();
         builder.Services.AddSingleton<MainDisplayService>();
         builder.Services.AddSingleton<ImageLibraryService>();
+        builder.Services.AddSingleton<ModalsService>();
 
         await builder.Build().RunAsync();
     }
