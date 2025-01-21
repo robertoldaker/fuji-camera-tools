@@ -55,7 +55,10 @@
             imageLibraryService.MonthsByYearLoaded+=(e,monthsByYear) => {
                 _monthsByYear = monthsByYear;
                 StateHasChanged();
-            };    
+            };   
+            imageLibraryService.ImagesByDateLoaded+=(e,imagesByDate) => {
+                StateHasChanged();
+            };
         }
     }
 
@@ -63,7 +66,6 @@
     private async void onMonthSelectedAsync(int year, int month) {
         if (imageLibraryService != null) {
             await imageLibraryService.SelectMonthAsync(year,month);
-            StateHasChanged();
         }
     }
 

@@ -146,7 +146,6 @@
             if ( imageLibraryService?.ImagesByDateList?.Count==0 ) {
                 // means there's no more left in this month so reload the months and go back to thumbnail
                 await imageLibraryService.LoadMonthsByYearAsync();
-                mainDisplayService?.SetShowState(MainDisplayService.ShowStateEnum.Thumbnails);
             } else {
                 // select the next image
                 imageLibraryService?.ReSelectImage();

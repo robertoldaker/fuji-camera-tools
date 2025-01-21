@@ -121,9 +121,7 @@ public class ImageLibraryService {
                 }
             }
             selectImage();
-        } else {
-            
-        }
+        } 
     }
 
     public void SelectPrevImage() {
