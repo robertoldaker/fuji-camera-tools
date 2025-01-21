@@ -12,6 +12,7 @@ public class DataAccessService {
         _httpClient = httpClient;
     }
 
+    /* image library */
     public string BaseAddress {
         get {
             return _httpClient.BaseAddress!.ToString();
@@ -33,7 +34,11 @@ public class DataAccessService {
         var data = await _httpClient.GetFromJsonAsync<ImageMetadataBase>($"ImageLibrary/ImageMetadata?id={encodedId}");
         return data!;
     }
+    public async Task LoadImagesAsync() {
+        await _httpClient.GetAsync($"ImageLibrary/LoadImages");
+    }
 
+    /* Configuration */
     public async Task<ConfigBase> GetConfigAsync() {
         var data = await _httpClient.GetFromJsonAsync<ConfigBase>($"Configuration/Config");
         return data!;

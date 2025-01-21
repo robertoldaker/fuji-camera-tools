@@ -53,5 +53,21 @@ img.mainImage.loading {
     opacity: 0;
 }
 
+img.mainImage.loaded {
+    animation-duration: 0.5s;
+    animation-name: merge-in;
+}
+
+  
+@keyframes merge-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 
 

@@ -1,20 +1,43 @@
 <div class="mainDisplayContainer">
-    <div class="@tnClass">
-        <ThumbnailBrowser />
-    </div>
-    <div class="@ieClass">
-        <ImageEditor />
-    </div>
+    @if ( _loadingImages ) {
+        <div style="text-align: center; margin-top:2rem">
+            <Spinner Title="Loading images ..." Color="SpinnerColor.Secondary" />
+        </div>
+    } else {
+        <div class="@tnClass">
+            <ThumbnailBrowser />
+        </div>
+        <div class="@ieClass">
+            <ImageEditor />
+        </div>
+    }
 </div>
 
 @code {
     [Inject]
+    ImageLibraryService? imageLibraryService {get; set;}
+
+    [Inject]
     MainDisplayService? mainDisplayService {get; set;}
+
+    private bool _loadingImages = false;
 
     string? tnClass {get; set;} 
     string? ieClass {get; set;}
 
     protected override void OnInitialized() {
+        if (imageLibraryService != null) {
+            if ( imageLibraryService.LoadingImages ) {
+                _loadingImages = true;
+            }
+            imageLibraryService.LoadImagesStarted += (e,li) => {
+                _loadingImages = li;
+                StateHasChanged();
+            };
+        } else {
+            Console.WriteLine($"ImageLibraryService null");
+        }
+
         if ( mainDisplayService!=null) {
             mainDisplayService.OnShowStateChanged+= (e,ss) => {
                 //
@@ -22,6 +45,7 @@
                 StateHasChanged();
             };
             setVisibility();
+            StateHasChanged();
         }
     }
 

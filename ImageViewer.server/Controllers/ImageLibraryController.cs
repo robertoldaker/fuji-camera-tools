@@ -82,4 +82,12 @@ public class ImageLibraryController : ControllerBase
     {
         return _imageLibrary.GetImageMetadata(id);
     }
+
+    /// <summary>
+    /// Re-loads the library
+    /// </summary>
+    [HttpGet("LoadImages")]
+    public void LoadImages() {
+        _imageLibrary.LoadImages();
+    }
 }

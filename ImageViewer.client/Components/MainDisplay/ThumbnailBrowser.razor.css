@@ -19,3 +19,8 @@ div.dateTitle {
 div.dateTitle:nth-child(1) {
     margin-top: 0.5rem;
 }
+
+div.noImagesAvailable {
+    margin-top: 10rem;
+    text-align: center;
+}

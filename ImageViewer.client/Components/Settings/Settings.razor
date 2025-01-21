@@ -32,12 +32,12 @@
     [Inject]
     ModalsService? modalsService {get ;set;}
 
+    [Inject]
+    ImageLibraryService? imageLibraryService {get ;set;}
+
     public Settings() {
         _errorTexts.Add("imageFolder",null);
     }
-    
-    ErrorText? _errorText;
-
     protected async override Task OnInitializedAsync() {
         if ( modalsService!=null) {
             modalsService.Register(this,"Settings");
@@ -56,14 +56,11 @@
     private async Task onShowingAsync() {
         if ( dataAccessService!=null ) {
             _config = await dataAccessService.GetConfigAsync();
-            Console.WriteLine($"onShowing [{_config.ImageFolder}]");
         }
 
     }
 
     private async Task save() {  
-        Console.WriteLine(_config.ImageFolder);
-        Console.WriteLine(_config.GooglePhotosConfig.Enabled);
         if ( dataAccessService!=null ) {
             var mess = await dataAccessService.SetConfigAsync(_config);
             if ( (int) mess.StatusCode == 422) {
@@ -71,6 +68,10 @@
                 if ( errors!=null ) {
                     UpdateErrors(errors);
                 }
+            } else if ( mess.IsSuccessStatusCode && imageLibraryService!=null ) {
+                //
+                await close();
+                await imageLibraryService.ReloadAsync();
             } else {
                 Console.WriteLine($"Statuscode = [{mess.StatusCode}]");
             }

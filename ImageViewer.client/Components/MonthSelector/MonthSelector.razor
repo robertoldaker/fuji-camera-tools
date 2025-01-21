@@ -1,5 +1,11 @@
 <div class="monthSelectorContainer">
-@if (_monthsByYear!=null) {
+@if (_loadingImages || _monthsByYear==null) {
+    <div style="text-align: center; margin-top:2rem">
+        <Spinner Title="Loading images ..." Color="SpinnerColor.Secondary" />
+    </div>
+} else if ( _monthsByYear.Count == 0 ) {
+    <div>No images found</div>
+} else {
     foreach (var item in _monthsByYear)
     {
         <div class="yearSelector">@item.Year</div>
@@ -8,8 +14,6 @@
                 <div class="monthSelector @getSelectedClass(item.Year,month)" @onclick="(e=>onMonthSelectedAsync(item.Year,month))">@_monthsDict[month]</div>
             }
     }
-} else {
-    <div>Loading...</div>
 }
 </div>
 
@@ -29,49 +33,46 @@
         {11, "Nov"},
         {12, "Dec"}
     };
-    private List<MonthsByYear>? _monthsByYear = null;
-    private int _selectedYear,_selectedMonth;
+    List<MonthsByYear>? _monthsByYear = null;
+    bool _loadingImages = false;
 
     [Inject]
     ImageLibraryService? imageLibraryService { get; set; }
 
-    [Inject]
-    MainDisplayService? mainDisplayService {get; set;}
-
     protected override void OnInitialized()    {
         if (imageLibraryService != null) {
+            if ( imageLibraryService.LoadingImages ) {
+                _loadingImages = true;
+            }
+            imageLibraryService.LoadImagesStarted += (e,li) => {
+                _loadingImages = li;
+                StateHasChanged();
+            };
             if ( imageLibraryService.MonthsByYear!=null) {
                 _monthsByYear = imageLibraryService.MonthsByYear;
-                selectFirstMonth();
                 StateHasChanged();
             } 
-            imageLibraryService.MonthsByYearLoaded+= (e,monthsByYear) => {
+            imageLibraryService.MonthsByYearLoaded+=(e,monthsByYear) => {
                 _monthsByYear = monthsByYear;
-                selectFirstMonth();
                 StateHasChanged();
             };    
         }
     }
 
-    private void selectFirstMonth() {
-        if ( _monthsByYear!=null && _monthsByYear.Count>0 && _monthsByYear[0].Months.Count>0) {
-            var year = _monthsByYear[0].Year;
-            var month = _monthsByYear[0].Months[0];
-            onMonthSelectedAsync(year, month);
-        }
-    }
 
     private async void onMonthSelectedAsync(int year, int month) {
         if (imageLibraryService != null) {
-            _selectedYear = year;
-            _selectedMonth = month;
-            await imageLibraryService.LoadNewThumbnailsAsync(year,month);
-            mainDisplayService?.SetShowState(MainDisplayService.ShowStateEnum.Thumbnails);
+            await imageLibraryService.SelectMonthAsync(year,month);
+            StateHasChanged();
         }
     }
 
     private string getSelectedClass(int year, int month) {
-        return (year == _selectedYear && month == _selectedMonth) ? "selected" : "";
+        if ( imageLibraryService!=null ) {
+            return (year == imageLibraryService.Year && month == imageLibraryService.Month) ? "selected" : "";
+        } else {
+            return "";
+        }
     }
  
 }

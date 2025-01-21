@@ -1,5 +1,5 @@
 <div class="thumbnailBrowserContainer">
-    @if ( imagesByDateList!=null ) {
+    @if ( imagesByDateList!=null && imagesByDateList.Count>0 ) {
         int dateIndex=0;
         @foreach( var ibd in imagesByDateList) {
             <div class="dateTitle">@ibd.Date.ToString("MMM dd, yyyy")</div>
@@ -14,8 +14,15 @@
             </div>
             dateIndex++;
         }
+    } else if (imagesByDateList == null ) {
+        <div>Null dateTitle list</div>
     } else {
-        <div>No images found</div>
+        <div class="noImagesAvailable">
+            <div>No images available</div>
+            <div style="margin-top: 2rem">
+                <Button Color="ButtonColor.Primary" Size="ButtonSize.Small" @onclick="settings"><Icon Name="IconName.Gear"></Icon> Edit settings</Button>
+            </div>
+        </div>
     }
 </div>
 
@@ -23,20 +30,27 @@
     [Inject]
     ImageLibraryService? imageLibraryService {get; set;}
 
+    [Inject]
+    ModalsService? modalsService {get; set;}
+
     List<ImagesByDate>? imagesByDateList {get; set;}
 
     protected override void OnInitialized()    {
         if (imageLibraryService != null) {
             if ( imageLibraryService.ImagesByDateList!=null) {
                 imagesByDateList = imageLibraryService.ImagesByDateList;
+                StateHasChanged();
             } 
             imageLibraryService.ImagesByDateLoaded+=(e,data)=>{
-                Console.WriteLine($"ImagesByDateLoaded {data.Count}");
                 imagesByDateList = data;
                 // Not sure on what conditions we need to do this??
                 StateHasChanged();
             };
         }
+    }
+
+    void settings() {
+        modalsService?.Show("Settings");
     }
 
 }

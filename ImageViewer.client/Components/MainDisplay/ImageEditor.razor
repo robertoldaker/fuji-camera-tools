@@ -27,7 +27,7 @@
                     <Icon Name="IconName.ChevronLeft" @onclick="loadPrev" />
                 </ImageButton>
             </div>
-            <img class="mainImage @(_loadingImage ? "loading" : "")" src="@getImageUrl()"  @onload="imageLoaded"/>
+            <img class="mainImage @(_loadingImage ? "loading" : "loaded" )" src="@getImageUrl()"  @onload="imageLoadedAsync"/>
             <div class="mainImageButton">
                 <ImageButton Tooltip="Next image">
                     <Icon Name="IconName.ChevronRight" @onclick="loadNext" />
@@ -103,7 +103,8 @@
         }
     }
 
-    private void imageLoaded() {
+    private async Task imageLoadedAsync() {
+        await Task.Delay(200);
         _loadingImage = false;
         StateHasChanged();
     }

@@ -12,21 +12,23 @@ public class Config : ConfigBase
         string configFile = Path.Combine(configDir, "config.json");
         return configFile;
     }
+
+    private static Config? _instance = null;
+
     public static Config CreateConfig() {
         var configFile = getConfigFile();
-        Config? instance = null;
         if ( File.Exists(configFile)) {
             string json = File.ReadAllText(configFile);
-            instance = JsonSerializer.Deserialize<Config>(json);
-            if ( instance == null ) {
+            _instance = JsonSerializer.Deserialize<Config>(json);
+            if ( _instance == null ) {
                 throw new Exception($"Failed to deserialize config");
             } 
         } else {
-            instance = new Config();
-            string json = JsonSerializer.Serialize(instance, new JsonSerializerOptions() { WriteIndented = true });
+            _instance = new Config();
+            string json = JsonSerializer.Serialize(_instance, new JsonSerializerOptions() { WriteIndented = true });
             File.WriteAllText(configFile, json);
         }
-        return instance;
+        return _instance;
     }
 
     public Config() {
@@ -42,7 +44,9 @@ public class Config : ConfigBase
     public void Save() {
         var configFile = getConfigFile();
         string json = JsonSerializer.Serialize(this, new JsonSerializerOptions() { WriteIndented = true });
-        File.WriteAllText(configFile, json);       
+        File.WriteAllText(configFile, json);
+        //
+        this.CopyTo(_instance!);
     }
 
     public Dictionary<string,string> CheckModel() {

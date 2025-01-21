@@ -9,15 +9,15 @@ public class ImageLibraryService {
     public ImageLibraryService(DataAccessService dataAccessService, MainDisplayService mainDisplayService) {
         _dataAccessService = dataAccessService;
         _mainDisplayService = mainDisplayService;
-        LoadMonthsByYearAsync();
+        ReloadAsync();
     }
 
     private DataAccessService _dataAccessService;
     private MainDisplayService _mainDisplayService;
-    
+    public event EventHandler<bool>? LoadImagesStarted;
+    private bool _loadingImages = false;    
     public event EventHandler<List<MonthsByYear>>? MonthsByYearLoaded;
     public List<MonthsByYear>? MonthsByYear { get; set; }
-
     public event EventHandler<List<ImagesByDate>>? ImagesByDateLoaded;
     public List<ImagesByDate>? ImagesByDateList {get; set;}
     public int Year {get; set;}
@@ -27,16 +27,44 @@ public class ImageLibraryService {
 
     public event EventHandler<ImageMetadataBase>? NewMetadataLoaded;
 
-    public async Task LoadNewThumbnailsAsync(int year, int month) {
-        ImagesByDateList = await _dataAccessService.GetImagesByDateAsync(year, month);
-        Year = year;
-        Month = month;
-        ImagesByDateLoaded?.Invoke(this,ImagesByDateList);
+    public async Task ReloadAsync() {
+        _loadingImages = true;
+        LoadImagesStarted?.Invoke(this,_loadingImages);
+        await _dataAccessService.LoadImagesAsync();
+        await LoadMonthsByYearAsync();
+        _loadingImages = false;
+        LoadImagesStarted?.Invoke(this,_loadingImages);
+    }
+
+    public bool LoadingImages {
+        get {
+            return _loadingImages;
+        }
     }
 
     public async Task LoadMonthsByYearAsync() {
         MonthsByYear = await _dataAccessService.GetMonthsByYearAsync();
+        _mainDisplayService?.SetShowState(ShowStateEnum.Thumbnails);
         MonthsByYearLoaded?.Invoke(this,MonthsByYear);
+        int year = 0;
+        int month = 0;
+        if ( MonthsByYear!=null && MonthsByYear.Count>0 ) {
+            year = MonthsByYear[0].Year;
+            month = MonthsByYear[0].Months[0];
+        } 
+        await SelectMonthAsync(year, month);
+    }
+
+    public async Task SelectMonthAsync(int year, int month) {
+        if ( year==0 ) {
+            ImagesByDateList = new List<ImagesByDate>();
+        } else {
+            ImagesByDateList = await _dataAccessService.GetImagesByDateAsync(year, month);
+        }
+        Year = year;
+        Month = month;
+        _mainDisplayService?.SetShowState(ShowStateEnum.Thumbnails);
+        ImagesByDateLoaded?.Invoke(this,ImagesByDateList);
     }
 
     public ImageInfo? SelectedImage {get; set;}

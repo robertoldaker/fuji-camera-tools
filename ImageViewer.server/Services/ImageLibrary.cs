@@ -10,14 +10,20 @@ public class ImageLibrary
 
     private List<ImageItem> _images = new List<ImageItem>();
 
+    private string? _loadedImageFolder = null;
+
     public ImageLibrary(Config config)
     {
-        Console.WriteLine("ImageLibrary creation started");
         _config = config;
+    }    
 
-        var files = getImageFiles();
-        createThumbnails(files);
-        createImageItems(files);
+    public void LoadImages() {
+        // only load in the config has changed
+        if ( _loadedImageFolder!=_config.ImageFolder) {
+            var files = getImageFiles();
+            createThumbnails(files);
+            createImageItems(files);
+        }
     }
 
     private void createThumbnails(List<string> files) {
@@ -25,6 +31,7 @@ public class ImageLibrary
             createThumbnail(f);
         }
     }
+
 
     private void createThumbnail(string imagePath) {
 
@@ -73,9 +80,8 @@ public class ImageLibrary
         List<string> files = new List<string>();
         if ( Directory.Exists(_config.ImageFolder)) {
             getImageFiles(files, _config.ImageFolder);
-        } else {
-            throw new Exception($"Image folder {_config.ImageFolder} does not exist");
-        }
+            _loadedImageFolder = _config.ImageFolder;
+        } 
         return files;
     }
 
