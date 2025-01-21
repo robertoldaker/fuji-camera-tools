@@ -15,14 +15,28 @@
 
     [Parameter]
     public int DateIndex {get; set;}
+
     [Parameter]
     public int ImageIndex {get; set;}
+
+    private int _imageCounter = 0;
+
+    protected override void OnInitialized() {
+        if ( imageLibraryService!=null ) {
+            imageLibraryService.ImageEdited += (e,imageInfo) => {
+                if ( ImageInfo!=null && imageInfo.Id == ImageInfo.Id) {
+                    _imageCounter++;
+                    StateHasChanged();
+                }
+            };
+        }
+    }
 
     string getThumbnailSrc() {
         if ( ImageInfo!=null && dataAccessService!=null ) {
             var id = ImageInfo.Id;
             var encodedId = System.Net.WebUtility.UrlEncode(id);
-            var url = $"{dataAccessService.BaseAddress}ImageLibrary/Thumbnail?id={encodedId}";
+            var url = $"{dataAccessService.BaseAddress}ImageLibrary/Thumbnail?id={encodedId}&imageCounter={_imageCounter}";
             return url;
         } else {
             // Should be an empty image or something??

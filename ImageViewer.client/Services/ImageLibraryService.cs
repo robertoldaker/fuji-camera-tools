@@ -27,6 +27,8 @@ public class ImageLibraryService {
 
     public event EventHandler<ImageMetadataBase>? NewMetadataLoaded;
 
+    public event EventHandler<ImageInfo>? ImageEdited;
+
     public async Task ReloadAsync() {
         _loadingImages = true;
         LoadImagesStarted?.Invoke(this,_loadingImages);
@@ -64,6 +66,10 @@ public class ImageLibraryService {
         Year = year;
         Month = month;
         _mainDisplayService?.SetShowState(ShowStateEnum.Thumbnails);
+        ImagesByDateLoaded?.Invoke(this,ImagesByDateList);
+    }
+    public async Task ReloadMonthAsync() {
+        ImagesByDateList = await _dataAccessService.GetImagesByDateAsync(Year, Month);
         ImagesByDateLoaded?.Invoke(this,ImagesByDateList);
     }
 
@@ -104,6 +110,22 @@ public class ImageLibraryService {
             selectImage();
         }
     }
+
+    public void ReSelectImage() {
+        if ( ImagesByDateList!=null && ImagesByDateList.Count > 0 ) {
+            if ( _selectedImageIndex>=ImagesByDateList[_selectedDateIndex].Images.Count) {
+                _selectedImageIndex = 0;
+                _selectedDateIndex++;
+                if ( _selectedDateIndex>=ImagesByDateList.Count) {
+                    _selectedDateIndex = 0;
+                }
+            }
+            selectImage();
+        } else {
+            
+        }
+    }
+
     public void SelectPrevImage() {
         if ( ImagesByDateList!=null && ImagesByDateList.Count > 0 ) {
             _selectedImageIndex--;
@@ -116,6 +138,12 @@ public class ImageLibraryService {
             }
             selectImage();
         }        
+    }
+
+    public void SelectedImageEdited() {
+        if ( SelectedImage!=null) {
+            ImageEdited?.Invoke(this,SelectedImage);
+        }
     }
    
 }

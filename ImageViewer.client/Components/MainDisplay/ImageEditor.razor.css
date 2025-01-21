@@ -49,6 +49,10 @@ img.mainImage {
     max-width: calc( 100vw - 550px );
 }
 
+img.mainImage.working {
+    opacity: 0.5;
+}
+
 img.mainImage.loading {
     opacity: 0;
 }

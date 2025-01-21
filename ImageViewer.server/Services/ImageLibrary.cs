@@ -33,11 +33,11 @@ public class ImageLibrary
     }
 
 
-    private void createThumbnail(string imagePath) {
+    private void createThumbnail(string imagePath, bool overwrite=false) {
 
         var thumbnailPath = getThumbnailPath(imagePath);
         var thumbnailFolder = Path.GetDirectoryName(thumbnailPath)!;
-        if ( !File.Exists(thumbnailPath)) {
+        if ( overwrite || !File.Exists(thumbnailPath)) {
             using (var image = Image.Load(imagePath)) {
                 var height = 100;
                 var width = (image.Width * height) / image.Height;
@@ -169,6 +169,45 @@ public class ImageLibrary
             var thumbnailPath = getThumbnailPath(id);
             thumbnailPath = Path.Combine( _config.ImageFolder , thumbnailPath);
             return File.ReadAllBytes(thumbnailPath);
+        }
+    }
+
+    public void RotateClockwise(string id) {
+        rotate(id, 90);
+    }
+
+    public void RotateAntiClockwise(string id) {
+        rotate(id, -90);
+    }
+
+    private void rotate(string id, float deg) {
+        lock (_images) {
+            var imagePath = Path.Combine(_config.ImageFolder,id);
+            if ( File.Exists(imagePath)) {
+                using (var image = Image.Load(imagePath)) {
+                    image.Mutate(x => x.Rotate(deg));
+                    image.Save(imagePath);
+                }
+                //
+                createThumbnail(imagePath,true);
+            }
+        }
+    }
+
+    public void Delete(string id) {
+        lock (_images) {
+            var imagePath = Path.Combine(_config.ImageFolder,id);
+            var thumbnailPath = getThumbnailPath(imagePath);
+            if ( File.Exists(imagePath)) {
+                File.Delete(imagePath);
+            }
+            if ( File.Exists(thumbnailPath)) {
+                File.Delete(thumbnailPath);
+            }
+            var image = _images.FirstOrDefault(x => x.Id == id.ToString());
+            if ( image!=null ) {
+                _images.Remove(image);
+            }
         }
     }
 }

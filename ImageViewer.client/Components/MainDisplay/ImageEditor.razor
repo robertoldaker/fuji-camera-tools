@@ -5,16 +5,16 @@
                 <Icon Name="IconName.ArrowLeftCircle"></Icon>
             </ImageButton>
             <div class="toolbarSeparator"></div>
-            <ImageButton Tooltip="Rotate 90 deg. clockwise">
+            <ImageButton OnClick="rotateClockwiseAsync" Tooltip="Rotate 90 deg. clockwise">
                 <Icon Name="IconName.ArrowClockwise"></Icon>
             </ImageButton>
-            <ImageButton Tooltip="Rotate 90 deg. anti-clockwise">
+            <ImageButton OnClick="rotateAntiClockwiseAsync" Tooltip="Rotate 90 deg. anti-clockwise">
                 <Icon Name="IconName.ArrowCounterclockwise"></Icon>
             </ImageButton>
             <ImageButton Tooltip="Edit external editor">
                 <Icon Name="IconName.Pencil"></Icon>
             </ImageButton>
-            <ImageButton Tooltip="Delete">
+            <ImageButton Tooltip="Delete" OnClick="deleteAsync">
                 <Icon Name="IconName.Trash"></Icon>
             </ImageButton>
             <ImageButton Tooltip="Upload to Google photos">
@@ -27,7 +27,7 @@
                     <Icon Name="IconName.ChevronLeft" @onclick="loadPrev" />
                 </ImageButton>
             </div>
-            <img class="mainImage @(_loadingImage ? "loading" : "loaded" )" src="@getImageUrl()"  @onload="imageLoadedAsync"/>
+            <img class="mainImage @(_loadingImage ? "loading" : "loaded" ) @(_working ? "working" : "" )" src="@getImageUrl()"  @onload="imageLoadedAsync"/>
             <div class="mainImageButton">
                 <ImageButton Tooltip="Next image">
                     <Icon Name="IconName.ChevronRight" @onclick="loadNext" />
@@ -48,7 +48,11 @@
     [Inject]
     DataAccessService? dataAccessService { get; set; }
 
-    bool _loadingImage = false;
+    bool _loadingImage = false, _working = false;
+
+    ImageInfo? _selectedImage = null;
+
+    int _imageCounter=0;
 
     protected override void OnInitialized()
     {
@@ -56,8 +60,11 @@
         {
             imageLibraryService.NewImageSelected += (e, selectedImage) =>
             {
-                _loadingImage = true;
-                StateHasChanged();
+                if ( _selectedImage==null || _selectedImage.Id != selectedImage.Id ) {
+                    _selectedImage = selectedImage;
+                    _loadingImage = true;
+                    StateHasChanged();
+                }
             };
         }
     }
@@ -78,7 +85,7 @@
         {
             var id = imageLibraryService.SelectedImage.Id;
             var encodedId = System.Net.WebUtility.UrlEncode(id);
-            var url = $"{dataAccessService.BaseAddress}ImageLibrary/Image?id={encodedId}";
+            var url = $"{dataAccessService.BaseAddress}ImageLibrary/Image?id={encodedId}&counter={_imageCounter}";
             return url;
         }
         else
@@ -106,6 +113,44 @@
     private async Task imageLoadedAsync() {
         await Task.Delay(200);
         _loadingImage = false;
+        _working = false;
         StateHasChanged();
+    }
+
+    private async Task rotateClockwiseAsync() {
+        if ( _selectedImage!=null) {
+            _working = true;
+            await dataAccessService!.RotateClockwiseAsync(_selectedImage.Id);
+            imageLibraryService?.SelectedImageEdited();
+            _imageCounter++;
+            StateHasChanged();
+        }
+    }
+
+    private async Task rotateAntiClockwiseAsync() {
+        if ( _selectedImage!=null) {
+            _working = true;
+            await dataAccessService!.RotateAntiClockwiseAsync(_selectedImage.Id);
+            imageLibraryService?.SelectedImageEdited();
+            _imageCounter++;
+            StateHasChanged();
+        }
+    }
+
+    private async Task deleteAsync() {
+        if ( _selectedImage!=null) {
+            _working = true;
+            await dataAccessService!.DeleteAsync(_selectedImage.Id);
+            await imageLibraryService!.ReloadMonthAsync();
+            _working = false;
+            if ( imageLibraryService?.ImagesByDateList?.Count==0 ) {
+                // means there's no more left in this month so reload the months and go back to thumbnail
+                await imageLibraryService.LoadMonthsByYearAsync();
+                mainDisplayService?.SetShowState(MainDisplayService.ShowStateEnum.Thumbnails);
+            } else {
+                // select the next image
+                imageLibraryService?.ReSelectImage();
+            }
+        }
     }
 }

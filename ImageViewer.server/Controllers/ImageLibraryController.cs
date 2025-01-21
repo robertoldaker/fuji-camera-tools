@@ -90,4 +90,32 @@ public class ImageLibraryController : ControllerBase
     public void LoadImages() {
         _imageLibrary.LoadImages();
     }
+
+    /// <summary>
+    /// Rotate the given image clockwise by 90deg.
+    /// </summary>
+    /// <param name="id"></param> <summary>
+    [HttpGet("RotateClockwise")]
+    public void RotateClockwise(string id) {
+        _imageLibrary.RotateClockwise(id);
+    }
+
+    /// <summary>
+    /// Rotate the given image anti-clockwise by 90deg.
+    /// </summary>
+    /// <param name="id"></param> <summary>
+    [HttpGet("RotateAntiClockwise")]
+    public void RotateAntiClockwise(string id) {
+        _imageLibrary.RotateAntiClockwise(id);        
+    }
+
+    /// <summary>
+    /// Delete the file
+    /// </summary>
+    /// <param name="id"></param> <summary>
+    [HttpGet("Delete")]
+    public void Delete(string id) {
+        _imageLibrary.Delete(id);        
+    }
+
 }

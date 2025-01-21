@@ -38,6 +38,21 @@ public class DataAccessService {
         await _httpClient.GetAsync($"ImageLibrary/LoadImages");
     }
 
+    public async Task RotateClockwiseAsync(string id) {
+        var encodedId = System.Net.WebUtility.UrlEncode(id);
+        await _httpClient.GetAsync($"ImageLibrary/RotateClockwise?id={encodedId}");
+    }
+
+    public async Task RotateAntiClockwiseAsync(string id) {
+        var encodedId = System.Net.WebUtility.UrlEncode(id);
+        await _httpClient.GetAsync($"ImageLibrary/RotateAntiClockwise?id={encodedId}");
+    }
+
+    public async Task DeleteAsync(string id) {
+        var encodedId = System.Net.WebUtility.UrlEncode(id);
+        await _httpClient.GetAsync($"ImageLibrary/Delete?id={encodedId}");
+    }
+
     /* Configuration */
     public async Task<ConfigBase> GetConfigAsync() {
         var data = await _httpClient.GetFromJsonAsync<ConfigBase>($"Configuration/Config");
