@@ -1,16 +1,28 @@
 @inherits ModalBase
 
-<Modal @ref="Modal" Title="Settings!" OnShowing="onShowingAsync">
+<Modal @ref="Modal" Title="Settings" OnShowing="onShowingAsync" Size="ModalSize.Large">
     <BodyTemplate>
         <div>    
             <table class="settingsTable">
                 <tr>
                     <td>Image folder!</td>
                     <td>
-                        <InputText @bind-Value="@_config.ImageFolder"/>
+                        <InputText @bind-Value="@_config.ImageFolder" style="width: 26rem"/>
                         <ErrorText @ref=@(_errorTexts["imageFolder"])></ErrorText>
                     </td>
                 </tr>
+                <tr>
+                    <td>Set fujifilm recipe onclick import</td>
+                    <td><InputCheckbox @bind-Value="_config.SetFujiFilmRecipe.Enabled"/></td>
+                </tr>            
+                <tr>
+                    <td class="@(_config.SetFujiFilmRecipe.Enabled ? "" : "disabled")">Google sheets api key</td>
+                    <td><InputText @bind-Value="_config.SetFujiFilmRecipe.ApiKey" disabled="@(!_config.SetFujiFilmRecipe.Enabled)" style="width: 26rem"/></td>
+                </tr>            
+                <tr>
+                    <td class="@(_config.SetFujiFilmRecipe.Enabled ? "" : "disabled")">Google sheets spreadsheet id</td>
+                    <td><InputText @bind-Value="_config.SetFujiFilmRecipe.SpreadsheetId" disabled="@(!_config.SetFujiFilmRecipe.Enabled)"  style="width: 26rem"/></td>
+                </tr>            
                 <tr>
                     <td>Use google photos</td>
                     <td><InputCheckbox @bind-Value="_config.GooglePhotosConfig.Enabled"/></td>
@@ -38,9 +50,9 @@
     public Settings() {
         _errorTexts.Add("imageFolder",null);
     }
-    protected async override Task OnInitializedAsync() {
+    protected override void OnInitialized() {
         if ( modalsService!=null) {
-            modalsService.Register(this,"Settings");
+            modalsService.Register(this,ModalDialog.Settings);
         } else {
             Console.WriteLine("null modalsService");
         }

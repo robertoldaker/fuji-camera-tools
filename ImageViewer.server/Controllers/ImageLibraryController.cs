@@ -10,9 +10,9 @@ public class ImageLibraryController : ControllerBase
 {
     private readonly ILogger<ImageLibraryController> _logger;
 
-    private readonly ImageLibrary _imageLibrary;
+    private readonly ImageLibraryService _imageLibrary;
 
-    public ImageLibraryController(ILogger<ImageLibraryController> logger, ImageLibrary imageLibrary)
+    public ImageLibraryController(ILogger<ImageLibraryController> logger, ImageLibraryService imageLibrary)
     {
         _logger = logger;
         _imageLibrary = imageLibrary;

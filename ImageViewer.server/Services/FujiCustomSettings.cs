@@ -7,7 +7,7 @@ using MetadataExtractor.Formats.Exif.Makernotes;
 namespace ImageViewer.server.Services;
 
 public class FujiCustomSettings : FujiCustomSettingsBase {
-    private static Regex _regExRecipe = new Regex(@"\(([\w\s]+)\)\.JPG$");
+    private static Regex _regExRecipe = new Regex(@"\((.+)\)\.JPG$");
 
     public FujiCustomSettings(IEnumerable<MetadataExtractor.Directory> directories, string imagePath) {
         this.WhiteBalanceShift = new int[2];
@@ -168,33 +168,30 @@ public class FujiCustomSettings : FujiCustomSettingsBase {
 
     }
 
-    public static bool AreEqual(FujiCustomSettings obj1, FujiCustomSettings obj2)
+    public static bool IsRecipeMatch(FujiCustomSettingsBase obj1, FujiCustomSettingsBase obj2)
     {
-        if (obj1 == null || obj2 == null)
+        if ( obj1.FilmSimulation!=obj2.FilmSimulation) {
             return false;
-
-        Type type = typeof(FujiCustomSettings);
-        foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-        {
-            var value1 = property.GetValue(obj1);
-            var value2 = property.GetValue(obj2);
-            
-            if (value1 is Array array1 && value2 is Array array2)
-            {
-                if (array1.Length != array2.Length)
-                    return false;
-
-                for (int i = 0; i < array1.Length; i++)
-                {
-                    if (!Equals(array1.GetValue(i), array2.GetValue(i)))
-                        return false;
-                }
+        } else if ( obj1.DynamicRange!=obj2.DynamicRange) {
+            return false;
+        } else if ( obj1.WhiteBalance!=obj2.WhiteBalance) {
+            return false;
+        } else if ( obj1.WhiteBalance == WhiteBalance.Kelvin && obj2.WhiteBalance == WhiteBalance.Kelvin) {
+            if ( obj1.WhiteBalanceTemp!=obj2.WhiteBalanceTemp) {
+                return false;
             }
-            else
-            {
-                if (!Equals(value1, value2))
-                    return false;
-            }
+        } else if ( obj1.WhiteBalanceShift[0]!=obj2.WhiteBalanceShift[0]) {
+            return false;
+        } else if ( obj1.WhiteBalanceShift[1]!=obj2.WhiteBalanceShift[1]) {
+            return false;
+        } else if ( obj1.Color!=obj2.Color) {
+            return false;
+        } else if ( obj1.Sharpness!=obj2.Sharpness) {
+            return false;
+        } else if ( obj1.HighlightTone!=obj2.HighlightTone) {
+            return false;
+        } else if ( obj1.ShadowTone!=obj2.ShadowTone) {
+            return false;
         }
         return true;
     }

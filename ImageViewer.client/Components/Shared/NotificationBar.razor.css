@@ -1,0 +1,33 @@
+div.notificationBarContainer {
+    position: fixed;
+    width: 30rem;
+    left: 1rem;
+    bottom: 1rem;
+    border-radius: 10px;
+    padding-left: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+    padding-right: 2rem;
+    background-color: cornsilk;
+    color: #666;
+    display: inline-block;
+    z-index: 100;
+}
+
+div.hide {
+    display: none;
+}
+
+div.notificationBarContainer.error {
+    background-color: lightcoral;
+    color: black;
+}
+
+div.close {
+    font-size: 1.5rem;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+}
+

@@ -8,3 +8,9 @@ div.header {
     justify-content: space-between;
     align-items: center;
 }
+
+div.importAlert {
+    position: fixed;
+    bottom: 0;
+    left: 1rem;
+}

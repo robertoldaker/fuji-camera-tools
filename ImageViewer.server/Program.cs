@@ -72,6 +72,8 @@ public class Program
     {
         var config = Config.CreateConfig();
         builder.Services.AddSingleton<Config>(config);
-        builder.Services.AddSingleton<ImageLibrary>(new ImageLibrary(config));
+        var imageLibraryService = new ImageLibraryService(config);
+        builder.Services.AddSingleton<ImageLibraryService>(imageLibraryService);
+        builder.Services.AddSingleton<ImageMoverService>(new ImageMoverService(config,imageLibraryService));
     }
 }

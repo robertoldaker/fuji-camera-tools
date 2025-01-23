@@ -46,6 +46,7 @@
             "args": [
                 "watch",
                 "--project ImageViewer.client.csproj",
+                "--non-interactive"
                 //"--verbose" // Let's us confirm browser connects with hot reload capabilities
             ],
             "postDebugTask": "killImageViewerClient"

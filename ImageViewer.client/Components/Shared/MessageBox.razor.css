@@ -1,0 +1,30 @@
+div.footer {
+    margin-top: 2rem;
+}
+
+div.messageBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div.message {
+    font-size: 1.2rem;;
+}
+
+div.icon {
+    font-size: 2rem;
+    padding-right: 1rem;
+}
+
+div.icon.error {
+    color: red;
+}
+
+div.icon.info {
+    color: blue;
+}
+
+div.icon.warning {
+    color: orange;
+}

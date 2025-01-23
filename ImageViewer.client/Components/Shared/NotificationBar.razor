@@ -1,0 +1,43 @@
+<div class="notificationBarContainer @closeClass @errorClass">
+    <Progress>
+        <ProgressBar Width="Progress" Color="ProgressColor.Warning"></ProgressBar>
+    </Progress>
+    <div class="close" @onclick="close">
+        <Icon Name="IconName.X"/>
+    </div>
+    <div class="message">@Message</div>
+</div>
+
+@code {
+    [Parameter]
+    public string Message {get; set;} = "";
+
+    [Parameter]
+    public int Progress {get; set;} = 50;
+
+    string closeClass = "hide", errorClass="";
+
+    void close() {
+        closeClass="hide";
+    }
+
+    public void Close() {
+        close();
+    }
+
+    public void SetErrorMessage(string message) {
+        Message = message;
+        Progress = 0;
+        errorClass = "error";
+        closeClass = "";
+        StateHasChanged();
+    }
+
+    public void SetMessage(string message, int progress) {
+        Message = message;
+        Progress = progress;
+        errorClass = "";
+        closeClass = "";
+        StateHasChanged();
+    }
+}

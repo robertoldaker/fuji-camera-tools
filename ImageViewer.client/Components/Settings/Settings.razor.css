@@ -1,6 +1,6 @@
 div.footer {
     margin-top: 2rem;
-    text-align: right;
+    text-align: left;
 }
 
 table.settingsTable > tr > td:first-child {
@@ -9,4 +9,8 @@ table.settingsTable > tr > td:first-child {
 
 table.settingsTable > tr > td {
     padding-top: 1rem;
+}
+
+td.disabled {
+    opacity: 0.5;
 }

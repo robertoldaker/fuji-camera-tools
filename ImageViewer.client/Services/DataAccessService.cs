@@ -62,4 +62,31 @@ public class DataAccessService {
         var mess = await _httpClient.PostAsJsonAsync($"Configuration/Config",config);
         return mess;
     }
+
+    /* image mover */
+    public async Task<(List<string>?,string?)> ListImportFilesAsync() {
+        var mess = await _httpClient.GetAsync($"ImageMover/ListFiles");
+        if ( mess.IsSuccessStatusCode) {
+            var data = await mess.Content.ReadFromJsonAsync<List<string>>();
+            return (data!,null);
+        } else if ((int) mess.StatusCode == 422) {
+            var errorMessage = await mess.Content.ReadAsStringAsync();
+            return (null,errorMessage);
+        } else {
+            return (null,mess.ReasonPhrase);
+        }
+    }
+    public async Task<(string?,string?)> ImportNextAsync() {
+        var mess = await _httpClient.GetAsync($"ImageMover/MoveNextFile");
+        if ( mess.IsSuccessStatusCode) {
+            var data = await mess.Content.ReadAsStringAsync();
+            return (data,null);
+        } else if ((int) mess.StatusCode == 422) {
+            var errorMessage = await mess.Content.ReadAsStringAsync();
+            return (null,errorMessage);
+        } else {
+            return (null,mess.ReasonPhrase);
+        }
+    }
+
 }

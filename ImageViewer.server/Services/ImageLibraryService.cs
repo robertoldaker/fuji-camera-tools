@@ -4,7 +4,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace ImageViewer.server.Services;
 
-public class ImageLibrary
+public class ImageLibraryService
 {
     private readonly Config _config;
 
@@ -12,7 +12,7 @@ public class ImageLibrary
 
     private string? _loadedImageFolder = null;
 
-    public ImageLibrary(Config config)
+    public ImageLibraryService(Config config)
     {
         _config = config;
     }    
@@ -23,6 +23,16 @@ public class ImageLibrary
             var files = getImageFiles();
             createThumbnails(files);
             createImageItems(files);
+        }
+    }
+
+    public void NewImage(string imagePath) {
+        createThumbnail(imagePath);
+        lock( _images ) {
+            var imageItem = createImageItem(imagePath);
+            _images.Add(imageItem);
+            // sort by descending date
+            _images.Sort((a, b) => b.Metadata.DateTime.CompareTo(a.Metadata.DateTime));
         }
     }
 
@@ -62,18 +72,23 @@ public class ImageLibrary
         lock( _images) {
             _images.Clear();
             foreach (var f in files) {
-                var metadata = new ImageMetadata(f);
-                // id is the file releative to the image folder
-                var id = f.Replace(_config.ImageFolder, "");
-                // ensure it does not start with directory separator (Path.Combine does not work!)
-                if ( id.StartsWith(Path.DirectorySeparatorChar)) {
-                    id = id.Substring(1);
-                }
-                _images.Add(new ImageItem(id, metadata));
+                var imageItem = createImageItem(f);
+                _images.Add(imageItem);
             }
             // sort by descending date
             _images.Sort((a, b) => b.Metadata.DateTime.CompareTo(a.Metadata.DateTime));
         }
+    }
+
+    private ImageItem createImageItem(string f) {
+        var metadata = new ImageMetadata(f);
+        // id is the file releative to the image folder
+        var id = f.Replace(_config.ImageFolder, "");
+        // ensure it does not start with directory separator (Path.Combine does not work!)
+        if ( id.StartsWith(Path.DirectorySeparatorChar)) {
+            id = id.Substring(1);
+        }
+        return new ImageItem(id, metadata);
     }
 
     private List<string> getImageFiles() {

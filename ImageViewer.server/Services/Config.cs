@@ -37,8 +37,12 @@ public class Config : ConfigBase
 
     private void CopyTo(Config config) {
         config.ImageFolder = ImageFolder;
-        config.GooglePhotosConfig.Enabled = GooglePhotosConfig.Enabled;
         // copy google photos stuff here
+        config.GooglePhotosConfig.Enabled = GooglePhotosConfig.Enabled;
+        // set fuji film recipe stuff
+        config.SetFujiFilmRecipe.Enabled = SetFujiFilmRecipe.Enabled;
+        config.SetFujiFilmRecipe.ApiKey = SetFujiFilmRecipe.ApiKey;
+        config.SetFujiFilmRecipe.SpreadsheetId = SetFujiFilmRecipe.SpreadsheetId;
     }
 
     public void Save() {

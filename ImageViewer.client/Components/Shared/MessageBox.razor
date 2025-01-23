@@ -1,0 +1,58 @@
+@inherits ModalBase
+
+<Modal @ref="Modal" OnShowing="onShowingAsync" Title="Message box">
+    <BodyTemplate>
+        <div class="messageBox">
+            <div class="icon @iconClass">
+                <Icon Name="@iconName"></Icon>
+            </div>
+            <div class="message">@Message</div>
+        </div>
+        <div class="footer">
+            <Button Color="ButtonColor.Primary" @onclick="close">Close</Button>
+        </div>
+    </BodyTemplate>
+</Modal>
+
+@code {
+
+    [Inject]
+    ModalsService? modalsService {get ;set;}
+
+    public string Message {get; set;} = "";
+
+    private IconName iconName = IconName.InfoCircle;
+
+    private string iconClass = "info";
+
+    public void SetIcon(MessageBoxIcon icon) {
+        if ( icon == MessageBoxIcon.Info) {
+            iconClass="info";
+            iconName = IconName.InfoCircle;
+        } else if ( icon == MessageBoxIcon.Warning) {
+            iconClass="warning";
+            iconName = IconName.ExclamationTriangle;
+        } else if ( icon == MessageBoxIcon.Error) {
+            iconClass="error";
+            iconName = IconName.ExclamationTriangle;
+        }
+    }
+
+    protected override void OnInitialized() {
+        if ( modalsService!=null) {
+            modalsService.Register(this,ModalDialog.MessageBox);
+        } else {
+            Console.WriteLine("null modalsService");
+        }
+    }
+
+    private async Task close()
+    {
+        await Modal!.HideAsync();
+    }
+
+    private async Task onShowingAsync() {
+
+    }
+
+}

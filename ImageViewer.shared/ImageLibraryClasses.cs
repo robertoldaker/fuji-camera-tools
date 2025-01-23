@@ -104,6 +104,7 @@ public class ConfigBase {
         ImageFolder = "";
         GooglePhotosConfig = new GooglePhotosConfigClass();
         //
+        SetFujiFilmRecipe = new SetFujiFilmRecipeClass();
     }
     public string ImageFolder {get; set;} = "";
     public GooglePhotosConfigClass GooglePhotosConfig { get; set; }
@@ -114,6 +115,14 @@ public class ConfigBase {
         }
         public bool Enabled { get; set; }
         // add google photos stuff here
+    }
+
+    public SetFujiFilmRecipeClass SetFujiFilmRecipe { get; set; }
+
+    public class SetFujiFilmRecipeClass {
+        public bool Enabled { get; set; } = false;
+        public string ApiKey { get; set; } = "";
+        public string SpreadsheetId { get; set; } = "";
     }
 
 }
