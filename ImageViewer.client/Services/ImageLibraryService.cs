@@ -32,7 +32,8 @@ public class ImageLibraryService {
     public async Task ReloadAsync() {
         _loadingImages = true;
         LoadImagesStarted?.Invoke(this,_loadingImages);
-        await _dataAccessService.LoadImagesAsync();
+        //done now in the server
+        //await _dataAccessService.LoadImagesAsync();
         await LoadMonthsByYearAsync();
         _loadingImages = false;
         LoadImagesStarted?.Invoke(this,_loadingImages);

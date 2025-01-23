@@ -15,20 +15,23 @@ public class ImageLibraryService
     public ImageLibraryService(Config config)
     {
         _config = config;
+        LoadImages();
     }    
 
     public void LoadImages() {
         // only load in the config has changed
         if ( _loadedImageFolder!=_config.ImageFolder) {
-            var files = getImageFiles();
-            createThumbnails(files);
-            createImageItems(files);
+            lock( _images ) {
+                var files = getImageFiles();
+                createThumbnails(files);
+                createImageItems(files);
+            }
         }
     }
 
     public void NewImage(string imagePath) {
-        createThumbnail(imagePath);
         lock( _images ) {
+            createThumbnail(imagePath);
             var imageItem = createImageItem(imagePath);
             _images.Add(imageItem);
             // sort by descending date
@@ -69,15 +72,13 @@ public class ImageLibraryService
     }
 
     private void createImageItems(List<string> files) {
-        lock( _images) {
-            _images.Clear();
-            foreach (var f in files) {
-                var imageItem = createImageItem(f);
-                _images.Add(imageItem);
-            }
-            // sort by descending date
-            _images.Sort((a, b) => b.Metadata.DateTime.CompareTo(a.Metadata.DateTime));
+        _images.Clear();
+        foreach (var f in files) {
+            var imageItem = createImageItem(f);
+            _images.Add(imageItem);
         }
+        // sort by descending date
+        _images.Sort((a, b) => b.Metadata.DateTime.CompareTo(a.Metadata.DateTime));
     }
 
     private ImageItem createImageItem(string f) {

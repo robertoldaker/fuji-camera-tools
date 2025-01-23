@@ -1,6 +1,6 @@
 {
-  "name": "ImageViewerTest.client",
-  "short_name": "ImageViewerTest.client",
+  "name": "Image Viewer",
+  "short_name": "Image Viewer",
   "id": "./",
   "start_url": "./",
   "display": "standalone",

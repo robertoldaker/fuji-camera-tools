@@ -9,9 +9,11 @@ namespace ImageViewer.server.Controllers;
 public class ConfigurationController : ControllerBase
 {
     private Services.Config _config;
+    private ImageLibraryService _imageLibraryService;
     
-    public ConfigurationController(Services.Config config) {
+    public ConfigurationController(Services.Config config, ImageLibraryService imageLibraryService) {
         _config = config;
+        _imageLibraryService = imageLibraryService;
     }
 
     /// <summary>
@@ -34,6 +36,7 @@ public class ConfigurationController : ControllerBase
             return this.ModelErrors(errors);
         } else {
             config.Save();
+            _imageLibraryService.LoadImages();
             return Ok();
         }
     }
