@@ -16,6 +16,7 @@ dotnet publish $app.csproj -o "$HOME/ImageViewer" -c "RELEASE"
 if [ $? -ne 0 ]; then
     raiseError;
 fi
+sudo systemctl restart ImageViewer
 
 echo "Build & publish successful. Press any key to continue";
 read

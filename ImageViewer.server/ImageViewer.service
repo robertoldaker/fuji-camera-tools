@@ -1,0 +1,13 @@
+[Unit]
+Description=Image Viewer
+
+[Service]
+WorkingDirectory=/home/rob/ImageViewer
+ExecStart=/usr/bin/dotnet /home/rob/ImageViewer/ImageViewer.server.dll --urls="http://*:5020"
+SyslogIdentifier=ImageViewer
+User=rob
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+[Install]
+WantedBy=multi-user.target
