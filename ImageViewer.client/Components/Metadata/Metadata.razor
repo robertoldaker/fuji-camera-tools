@@ -4,6 +4,10 @@
             <td colspan="="2" class="sectionTitle">General</td>
         </tr>
         <tr>
+            <td>Id</td>
+            <td>@imageLibraryService?.SelectedImage?.Id</td>
+        </tr>
+        <tr>
             <td>Timestamp</td>
             <td>@(_metadata.DateTime.ToString("MMM dd, yyyy hh:mm"))</td>
         </tr>
@@ -90,6 +94,7 @@
             imageLibraryService.NewMetadataLoaded += (e, imageMetadata) =>
             {
                 _metadata = imageMetadata;
+                ;
                 StateHasChanged();
             };
         }

@@ -33,7 +33,6 @@ public class ImageLibraryService {
         _loadingImages = true;
         LoadImagesStarted?.Invoke(this,_loadingImages);
         //done now in the server
-        //await _dataAccessService.LoadImagesAsync();
         await LoadMonthsByYearAsync();
         _loadingImages = false;
         LoadImagesStarted?.Invoke(this,_loadingImages);
