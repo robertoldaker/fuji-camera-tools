@@ -62,6 +62,10 @@ public class DataAccessService {
         var mess = await _httpClient.PostAsJsonAsync($"Configuration/Config",config);
         return mess;
     }
+    public async Task<VersionDataBase> GetVersionAsync() {
+        var vd = await _httpClient.GetFromJsonAsync<VersionDataBase>($"Configuration/Version");
+        return vd!;
+    }
 
     /* image mover */
     public async Task<(List<string>?,string?)> ListImportFilesAsync() {

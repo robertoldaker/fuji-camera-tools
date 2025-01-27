@@ -1,5 +1,4 @@
 #
-#dest="roberto@lv-app.net-zero-energy-systems.org"
 app="ImageViewer.server"
 
 function raiseError()
@@ -8,6 +7,12 @@ function raiseError()
     read
     exit -1;
 }
+
+# Check version control and also generate VersionData.cs before publishing
+python ../Scripts/CheckVersion.py .. VersionData.csx VersionData.cs
+if [ $? -ne 0 ]; then
+    raiseError;
+fi
 
 echo "Deleting old ASP.NET build ..."
 rm -r $HOME/ImageViewer

@@ -126,5 +126,11 @@ public class ConfigBase {
     }
 
 }
+
+public class VersionDataBase {
+    public string Version {get; set;} = "";
+    public string CommitId {get; set;} = "";
+    public string CommitDate {get; set;} = "";
+}
  
 

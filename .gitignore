@@ -3,3 +3,4 @@ obj
 build
 ASP_BUILD
 *.suo
+ImageViewer.server/VersionData.cs

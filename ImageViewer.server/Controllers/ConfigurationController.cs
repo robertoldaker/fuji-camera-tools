@@ -40,4 +40,13 @@ public class ConfigurationController : ControllerBase
             return Ok();
         }
     }
+
+    /// <summary>
+    /// Gets version
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("Version")]
+    public VersionDataBase GetVersion() {
+        return new VersionData();
+    }
 }
