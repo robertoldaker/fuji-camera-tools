@@ -37,6 +37,7 @@ public class Config : ConfigBase
 
     private void CopyTo(Config config) {
         config.ImageFolder = ImageFolder;
+        config.ExternalEditor = ExternalEditor;
         // copy google photos stuff here
         config.GooglePhotosConfig.Enabled = GooglePhotosConfig.Enabled;
         // set fuji film recipe stuff

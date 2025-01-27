@@ -118,4 +118,13 @@ public class ImageLibraryController : ControllerBase
         _imageLibrary.Delete(id);        
     }
 
+    /// <summary>
+    /// Open in editor
+    /// </summary>
+    /// <param name="id"></param>
+    [HttpGet("OpenInEditor")]
+    public void OpenInEditor(string id) {
+        _imageLibrary.OpenInEditor(id);
+    }
+
 }

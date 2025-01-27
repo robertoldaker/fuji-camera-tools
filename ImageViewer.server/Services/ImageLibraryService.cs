@@ -135,7 +135,8 @@ public class ImageLibraryService
                     imagesByDate = new ImagesByDate(date);
                     imagesByDateList.Add(imagesByDate);
                 }
-                imagesByDate!.Images.Add(new ImageViewer.shared.ImageInfo(i.Id, false));
+                var imagePath = Path.Combine(_config.ImageFolder,i.Id);
+                imagesByDate!.Images.Add(new ImageViewer.shared.ImageInfo(i.Id, imagePath, false));
             }
         }
         return imagesByDateList;
@@ -225,6 +226,11 @@ public class ImageLibraryService
                 _images.Remove(image);
             }
         }
+    }
+    public void OpenInEditor(string id) {
+        var imagePath = Path.Combine(_config.ImageFolder,id);
+        var editor = _config.ExternalEditor;
+        System.Diagnostics.Process.Start("nohup",new List<string>() {editor,imagePath});
     }
 }
 

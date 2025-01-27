@@ -48,6 +48,11 @@ public class DataAccessService {
         await _httpClient.GetAsync($"ImageLibrary/RotateAntiClockwise?id={encodedId}");
     }
 
+    public async Task OpenInEditorAsync(string id) {
+        var encodedId = System.Net.WebUtility.UrlEncode(id);
+        await _httpClient.GetAsync($"ImageLibrary/OpenInEditor?id={encodedId}");
+    }
+
     public async Task DeleteAsync(string id) {
         var encodedId = System.Net.WebUtility.UrlEncode(id);
         await _httpClient.GetAsync($"ImageLibrary/Delete?id={encodedId}");

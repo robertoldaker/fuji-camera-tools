@@ -12,12 +12,14 @@ public class ImagesByDate {
 }
 
 public class ImageInfo {
-    public ImageInfo(string id, bool inGooglePhotos) {
+    public ImageInfo(string id, string fullPath, bool inGooglePhotos) {
         Id = id;
+        FullPath = fullPath;
         InGooglePhotos = inGooglePhotos;
     }
     public string Id {get; set;}
     public bool InGooglePhotos {get; set;}
+    public string FullPath {get; set;}
 }
 
 public class MonthsByYear {
@@ -108,6 +110,7 @@ public class ConfigBase {
         SetFujiFilmRecipe = new SetFujiFilmRecipeClass();
     }
     public string ImageFolder {get; set;} = "";
+    public string ExternalEditor {get; set;} = "gimp";
     public GooglePhotosConfigClass GooglePhotosConfig { get; set; }
     
     public class GooglePhotosConfigClass {

@@ -1,3 +1,4 @@
+@using System.Diagnostics
 <div class="imageEditorContainer">
     <div class="imageEditorInnerContainer">
         <div class="imageEditorToolbar">
@@ -11,7 +12,7 @@
             <ImageButton OnClick="rotateAntiClockwiseAsync" Tooltip="Rotate 90 deg. anti-clockwise">
                 <Icon Name="IconName.ArrowCounterclockwise"></Icon>
             </ImageButton>
-            <ImageButton Tooltip="Edit external editor">
+            <ImageButton Tooltip="Edit external editor" OnClick="openExternalEditorAsync">
                 <Icon Name="IconName.Pencil"></Icon>
             </ImageButton>
             <ImageButton Tooltip="Delete" OnClick="deleteAsync">
@@ -150,6 +151,12 @@
                 // select the next image
                 imageLibraryService?.ReSelectImage();
             }
+        }
+    }
+
+    private async Task openExternalEditorAsync() {
+        if ( dataAccessService!=null && _selectedImage!=null ) {
+            await dataAccessService.OpenInEditorAsync(_selectedImage.Id);
         }
     }
 }
