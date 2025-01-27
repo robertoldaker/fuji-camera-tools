@@ -51,14 +51,18 @@ public class ImageLibraryService
         var thumbnailPath = getThumbnailPath(imagePath);
         var thumbnailFolder = Path.GetDirectoryName(thumbnailPath)!;
         if ( overwrite || !File.Exists(thumbnailPath)) {
-            using (var image = Image.Load(imagePath)) {
-                var height = 100;
-                var width = (image.Width * height) / image.Height;
-                image.Mutate(x => x.Resize(width, height));
-                if ( !Directory.Exists(thumbnailFolder)) {
-                    Directory.CreateDirectory(thumbnailFolder);
+            try {
+                using (var image = Image.Load(imagePath)) {
+                    var height = 100;
+                    var width = (image.Width * height) / image.Height;
+                    image.Mutate(x => x.Resize(width, height));
+                    if ( !Directory.Exists(thumbnailFolder)) {
+                        Directory.CreateDirectory(thumbnailFolder);
+                    }
+                    image.Save(thumbnailPath);
                 }
-                image.Save(thumbnailPath);
+            } catch {
+
             }
         }
     }
@@ -102,7 +106,7 @@ public class ImageLibraryService
     }
 
     private void getImageFiles(List<string> totalFiles, string folder) {
-        var files = Directory.GetFiles(folder, "*").ToList();
+        var files = Directory.GetFiles(folder, "*.JPG").ToList();        
         totalFiles.AddRange(files);
         var folders = Directory.GetDirectories(folder);
         foreach (var f in folders) {
