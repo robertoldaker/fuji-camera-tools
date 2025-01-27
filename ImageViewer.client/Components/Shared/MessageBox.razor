@@ -1,12 +1,12 @@
 @inherits ModalBase
 
-<Modal @ref="Modal" OnShowing="onShowingAsync" Title="Message box">
+<Modal @ref="Modal" OnShowing="onShowingAsync" Title="Image viewer" Size="ModalSize.Regular">
     <BodyTemplate>
         <div class="messageBox">
             <div class="icon @iconClass">
                 <Icon Name="@iconName"></Icon>
             </div>
-            <div class="message">@Message</div>
+            <div class="message">@((MarkupString)Message)</div>
         </div>
         <div class="footer">
             <Button Color="ButtonColor.Primary" @onclick="close">Close</Button>
