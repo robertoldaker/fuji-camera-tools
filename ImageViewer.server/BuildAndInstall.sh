@@ -21,8 +21,11 @@ dotnet publish $app.csproj -o "$HOME/ImageViewer" -c "RELEASE"
 if [ $? -ne 0 ]; then
     raiseError;
 fi
-echo "Restarting ImageViewer service"
-sudo systemctl restart ImageViewer
+
+# now uses script ImageViewer.sh to start/stop
+# this is added to startup application to get the program to run at boot
+echo "Restarting ImageViewer"
+~/ImageViewer/ImageViewer.sh restart
 
 echo "Build & publish successful. Press any key to continue";
 read

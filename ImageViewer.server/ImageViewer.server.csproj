@@ -17,4 +17,10 @@
     <ProjectReference Include="..\ImageViewer.client\ImageViewer.client.csproj" />
     <ProjectReference Include="..\ImageViewer.shared\ImageViewer.shared.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="ImageViewer.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
 </Project>
