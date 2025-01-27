@@ -145,6 +145,23 @@ public class FujiCustomSettings : FujiCustomSettingsBase {
             this.HighlightTone = -st/16;
         } 
     }
+
+    private void setNoiseReduction(FujifilmMakernoteDirectory mn) {        
+        if ( mn.TryGetInt16(4110, out short sh) ) {
+            if ( sh == 512 ) {
+                this.NoiseReduction=-2;
+            } else if ( sh == 640 ) {
+                this.NoiseReduction = -1;                
+            } else if ( sh == 0) {
+                this.NoiseReduction = 0;
+            } else if ( sh == 384 ) {
+                this.NoiseReduction = 1;
+            } else if ( sh == 256 ) {
+                this.NoiseReduction = 2;
+            }
+        } 
+    }
+
     private void setFields(IEnumerable<MetadataExtractor.Directory> directories) {
         //
         var mn = directories.OfType<FujifilmMakernoteDirectory>().FirstOrDefault();
@@ -165,6 +182,8 @@ public class FujiCustomSettings : FujiCustomSettingsBase {
         setHighlightTone(mn);
 
         setShadowTone(mn);
+
+        setNoiseReduction(mn);
 
     }
 
@@ -192,6 +211,8 @@ public class FujiCustomSettings : FujiCustomSettingsBase {
             return false;
         } else if ( obj1.ShadowTone!=obj2.ShadowTone) {
             return false;
+        } else if ( obj1.NoiseReduction!=obj2.NoiseReduction) {
+            return false;
         }
         return true;
     }
@@ -207,6 +228,7 @@ Color={fcs.Color}
 Sharpness={fcs.Sharpness}
 Highlight tone={fcs.HighlightTone}
 Shadow tone={fcs.ShadowTone}
+Noise reduction={fcs.NoiseReduction}
 ";
     }
 

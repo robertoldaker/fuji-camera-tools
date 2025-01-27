@@ -92,6 +92,7 @@ public class FujiCustomSettingsBase {
     public int Sharpness {get; set; }
     public int ShadowTone {get; set; }
     public int HighlightTone {get; set; }
+    public int NoiseReduction {get; set;}
     public string GetWhiteBalanceStr() {
         var wbStr = WhiteBalance == WhiteBalance.Kelvin ? $"{WhiteBalanceTemp}K" : $"{WhiteBalance}";
         return $"{wbStr} (R {WhiteBalanceShift[0]}, B {WhiteBalanceShift[1]})";

@@ -44,6 +44,7 @@ public class FujiRecipes
             sharpnessIdx = 6,
             highlightToneIdx = 7,
             shadowToneIdx = 8,
+            noiseReductionIdx = 9,
             wbIdx = 10,
             wbTempIdx=11,
             rShiftIdx=12,
@@ -68,6 +69,7 @@ public class FujiRecipes
                     fr.Sharpness = getIntValue(row[sharpnessIdx]);
                     fr.HighlightTone = getIntValue(row[highlightToneIdx]);
                     fr.ShadowTone = getIntValue(row[shadowToneIdx]);
+                    fr.NoiseReduction = getIntValue(row[noiseReductionIdx]);
                     fr.WhiteBalance = (WhiteBalance) Enum.Parse(typeof(WhiteBalance), (string) row[wbIdx]);
                     fr.WhiteBalanceTemp = string.IsNullOrEmpty(((string) row[wbTempIdx])) ? 0 : getIntValue(row[wbTempIdx]);
                     fr.WhiteBalanceShift[0] = getIntValue(row[rShiftIdx]);
