@@ -187,31 +187,33 @@ public class FujiCustomSettings : FujiCustomSettingsBase {
 
     }
 
-    public static bool IsRecipeMatch(FujiCustomSettingsBase obj1, FujiCustomSettingsBase obj2)
+    public static bool IsRecipeMatch(FujiCustomSettingsBase image, FujiCustomSettingsBase recipe)
     {
-        if ( obj1.FilmSimulation!=obj2.FilmSimulation) {
+        if ( image.FilmSimulation!=recipe.FilmSimulation) {
             return false;
-        } else if ( obj1.DynamicRange!=obj2.DynamicRange) {
+        // Auto dynmaic range can cause dynamic range to be set to something explicit so ignore if recipe has not
+        // nailed this down to 100, 200 or 400
+        } else if ( recipe.DynamicRange != DynamicRange.Auto && image.DynamicRange!=recipe.DynamicRange) {
             return false;
-        } else if ( obj1.WhiteBalance!=obj2.WhiteBalance) {
+        } else if ( image.WhiteBalance!=recipe.WhiteBalance) {
             return false;
-        } else if ( obj1.WhiteBalance == WhiteBalance.Kelvin && obj2.WhiteBalance == WhiteBalance.Kelvin) {
-            if ( obj1.WhiteBalanceTemp!=obj2.WhiteBalanceTemp) {
+        } else if ( image.WhiteBalance == WhiteBalance.Kelvin && recipe.WhiteBalance == WhiteBalance.Kelvin) {
+            if ( image.WhiteBalanceTemp!=recipe.WhiteBalanceTemp) {
                 return false;
             }
-        } else if ( obj1.WhiteBalanceShift[0]!=obj2.WhiteBalanceShift[0]) {
+        } else if ( image.WhiteBalanceShift[0]!=recipe.WhiteBalanceShift[0]) {
             return false;
-        } else if ( obj1.WhiteBalanceShift[1]!=obj2.WhiteBalanceShift[1]) {
+        } else if ( image.WhiteBalanceShift[1]!=recipe.WhiteBalanceShift[1]) {
             return false;
-        } else if ( obj1.Color!=obj2.Color) {
+        } else if ( image.Color!=recipe.Color) {
             return false;
-        } else if ( obj1.Sharpness!=obj2.Sharpness) {
+        } else if ( image.Sharpness!=recipe.Sharpness) {
             return false;
-        } else if ( obj1.HighlightTone!=obj2.HighlightTone) {
+        } else if ( image.HighlightTone!=recipe.HighlightTone) {
             return false;
-        } else if ( obj1.ShadowTone!=obj2.ShadowTone) {
+        } else if ( image.ShadowTone!=recipe.ShadowTone) {
             return false;
-        } else if ( obj1.NoiseReduction!=obj2.NoiseReduction) {
+        } else if ( image.NoiseReduction!=recipe.NoiseReduction) {
             return false;
         }
         return true;
