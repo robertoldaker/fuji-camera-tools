@@ -137,7 +137,8 @@ public class SdCardImageMover : IImageMover
 
     private List<string> listFiles() {
         //var extension = ".JPG";
-        return Directory.GetFiles(_sourceFolder, $"*").ToList();
+        //return Directory.GetFiles(_sourceFolder, $"*").ToList();
+        return Directory.GetFiles(_sourceFolder,"*.JPG",SearchOption.AllDirectories).ToList();
     }
 
 }
